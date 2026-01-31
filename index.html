@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏰 PASSPORT FORTRESS v5.0 ULTIMATE FINAL — Legal Command Center</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Source+Sans+Pro:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-primary: #0a0a0f; --bg-secondary: #12121a; --bg-tertiary: #1a1a25; --bg-card: #15151f;
+      --gold-primary: #d4af37; --gold-light: #f4e4bc; --gold-dark: #b8960c;
+      --purple-primary: #9b59b6; --purple-light: #c39bd3; --purple-dark: #7d3c98;
+      --blue-primary: #3498db; --blue-light: #85c1e9; --blue-dark: #2471a3;
+      --emerald-primary: #10b981; --emerald-light: #6ee7b7; --emerald-dark: #059669;
+      --teal-primary: #0d9488; --teal-light: #5eead4; --teal-dark: #0f766e;
+      --text-primary: #e8e8e8; --text-secondary: #a0a0a0; --text-muted: #666;
+      --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --border: #2a2a3a;
+      --sidebar-width: 260px; --manual-sidebar-width: 280px;
+    }
+    body { background: var(--bg-primary); color: var(--text-primary); font-family: 'Source Sans Pro', sans-serif; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg-secondary); } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .app-container { display: flex; min-height: 100vh; }
+    
+    /* MAIN SIDEBAR (Dark) */
+    .sidebar { width: var(--sidebar-width); background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; overflow-y: auto; }
+    .sidebar-header { padding: 1.25rem; border-bottom: 1px solid var(--border); text-align: center; }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 800; background: linear-gradient(135deg, var(--gold-primary), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo-subtitle { font-size: 0.55rem; color: var(--text-muted); letter-spacing: 0.2em; margin-top: 0.2rem; }
+    .version-badge { display: inline-block; background: var(--emerald-primary); color: #000; font-size: 0.5rem; padding: 0.1rem 0.35rem; border-radius: 8px; margin-top: 0.35rem; font-weight: 700; }
+    .nav-section { padding: 0.4rem 0; flex: 1; overflow-y: auto; }
+    .nav-group-title { font-size: 0.5rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; padding: 0.5rem 0.9rem 0.35rem; text-transform: uppercase; }
+    .nav-item { display: flex; align-items: center; padding: 0.5rem 0.9rem; cursor: pointer; transition: all 0.2s ease; border-left: 3px solid transparent; gap: 0.5rem; }
+    .nav-item:hover { background: rgba(255,255,255,0.03); }
+    .nav-item.active-gold { background: rgba(212, 175, 55, 0.1); border-left-color: var(--gold-primary); }
+    .nav-item.active-purple { background: rgba(155, 89, 182, 0.1); border-left-color: var(--purple-primary); }
+    .nav-item.active-blue { background: rgba(52, 152, 219, 0.1); border-left-color: var(--blue-primary); }
+    .nav-item.active-emerald { background: rgba(16, 185, 129, 0.1); border-left-color: var(--emerald-primary); }
+    .nav-icon { font-size: 0.95rem; width: 18px; text-align: center; } .nav-text { font-size: 0.75rem; font-weight: 500; }
+    .nav-badge { margin-left: auto; font-size: 0.55rem; padding: 0.1rem 0.35rem; border-radius: 8px; font-weight: 600; }
+    .badge-gold { background: var(--gold-primary); color: #000; } .badge-purple { background: var(--purple-primary); color: #fff; }
+    .badge-blue { background: var(--blue-primary); color: #fff; } .badge-emerald { background: var(--emerald-primary); color: #000; }
+    
+    /* MANUAL SIDEBAR (White - appears when Manual is active) */
+    .manual-sidebar { width: var(--manual-sidebar-width); background: #ffffff; border-right: 1px solid #e5e7eb; position: fixed; left: var(--sidebar-width); height: 100vh; z-index: 99; overflow-y: auto; display: none; flex-direction: column; }
+    .manual-sidebar.visible { display: flex; }
+    .manual-sidebar-header { background: linear-gradient(135deg, var(--teal-primary), var(--teal-dark)); padding: 1rem 1.25rem; color: white; }
+    .manual-sidebar-header h2 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .manual-sidebar-header p { font-size: 0.7rem; opacity: 0.9; }
+    .manual-sidebar-search { padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+    .manual-sidebar-search input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: #f9fafb; }
+    .manual-sidebar-search input:focus { outline: none; border-color: var(--teal-primary); background: white; }
+    .manual-toc-list { flex: 1; overflow-y: auto; padding: 0.5rem 0; }
+    .manual-toc-item { display: flex; align-items: center; padding: 0.6rem 1rem; cursor: pointer; color: #374151; font-size: 0.8rem; border-left: 3px solid transparent; transition: all 0.2s; gap: 0.5rem; }
+    .manual-toc-item:hover { background: #f3f4f6; }
+    .manual-toc-item.active { background: #e0f2fe; border-left-color: var(--teal-primary); color: var(--teal-dark); font-weight: 600; }
+    .manual-toc-icon { font-size: 0.85rem; width: 20px; text-align: center; color: #6b7280; }
+    .manual-toc-item.active .manual-toc-icon { color: var(--teal-primary); }
+    .manual-sidebar-footer { padding: 0.75rem 1rem; border-top: 1px solid #e5e7eb; background: #f9fafb; }
+    .manual-sidebar-footer p { font-size: 0.65rem; color: #6b7280; text-align: center; }
+    
+    /* MAIN CONTENT */
+    .main-content { flex: 1; margin-left: var(--sidebar-width); min-height: 100vh; transition: margin-left 0.3s ease; }
+    .main-content.with-manual-sidebar { margin-left: calc(var(--sidebar-width) + var(--manual-sidebar-width)); }
+    .header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 0.65rem 1.25rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+    .header-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; }
+    .header-title.gold { color: var(--gold-primary); } .header-title.purple { color: var(--purple-primary); } .header-title.blue { color: var(--blue-primary); } .header-title.emerald { color: var(--emerald-primary); } .header-title.teal { color: var(--teal-primary); }
+    .search-box { display: flex; align-items: center; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem 0.65rem; gap: 0.35rem; }
+    .search-box input { background: transparent; border: none; color: var(--text-primary); font-size: 0.8rem; width: 160px; outline: none; }
+    .page-content { padding: 1.25rem; }
+    
+    /* CARDS */
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem; transition: all 0.3s ease; margin-bottom: 0.9rem; }
+    .card:hover { border-color: var(--gold-dark); }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 600; color: var(--gold-primary); margin-bottom: 0.65rem; }
+    .card-title.emerald { color: var(--emerald-primary); } .card-title.blue { color: var(--blue-primary); } .card-title.purple { color: var(--purple-primary); }
+    .card-content { color: var(--text-secondary); font-size: 0.8rem; line-height: 1.5; }
+    
+    /* BUTTONS */
+    .btn { padding: 0.35rem 0.65rem; border-radius: 5px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; border: none; display: inline-flex; align-items: center; gap: 0.35rem; }
+    .btn-gold { background: var(--gold-primary); color: #000; } .btn-gold:hover { background: var(--gold-light); }
+    .btn-emerald { background: var(--emerald-primary); color: #000; } .btn-emerald:hover { background: var(--emerald-light); }
+    .btn-blue { background: var(--blue-primary); color: #fff; } .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-primary); }
+    .btn-teal { background: var(--teal-primary); color: #fff; } .btn-teal:hover { background: var(--teal-light); color: #000; }
+    
+    /* COUNTDOWN & STATS */
+    .countdown-container { background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05)); border: 1px solid var(--gold-dark); border-radius: 10px; padding: 1.1rem; text-align: center; margin-bottom: 1.1rem; }
+    .countdown-label { font-size: 0.7rem; color: var(--gold-light); letter-spacing: 0.1em; margin-bottom: 0.35rem; }
+    .countdown-value { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 800; color: var(--gold-primary); }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.65rem; margin-bottom: 1.1rem; }
+    .stat-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 0.65rem; text-align: center; }
+    .stat-value { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--gold-primary); }
+    .stat-label { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.15rem; }
+    
+    /* LETTERS */
+    .letter-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin-bottom: 0.65rem; cursor: pointer; transition: all 0.3s ease; }
+    .letter-card:hover { border-color: var(--emerald-primary); transform: translateX(4px); }
+    .letter-title { font-weight: 600; color: var(--emerald-light); font-size: 0.9rem; margin-bottom: 0.35rem; }
+    .letter-badge { font-size: 0.55rem; padding: 0.12rem 0.35rem; border-radius: 4px; font-weight: 600; display: inline-block; margin-bottom: 0.35rem; }
+    .letter-badge.primary { background: rgba(16, 185, 129, 0.2); color: var(--emerald-light); }
+    .letter-badge.exhibit { background: rgba(52, 152, 219, 0.2); color: var(--blue-light); }
+    .letter-badge.malpractice { background: rgba(155, 89, 182, 0.2); color: var(--purple-light); }
+    .letter-badge.support { background: rgba(212, 175, 55, 0.2); color: var(--gold-light); }
+    .letter-recipient { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+    .letter-description { font-size: 0.75rem; color: var(--text-secondary); }
+    
+    /* MODAL */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1.25rem; }
+    .modal-content { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; width: 100%; max-width: 800px; max-height: 85vh; overflow: hidden; display: flex; flex-direction: column; }
+    .modal-header { padding: 1.1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--emerald-primary); }
+    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
+    .modal-body { padding: 1.1rem; overflow-y: auto; flex: 1; }
+    .letter-text { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; line-height: 1.55; color: var(--text-primary); white-space: pre-wrap; background: var(--bg-primary); padding: 1.1rem; border-radius: 6px; border: 1px solid var(--border); }
+    .modal-footer { padding: 0.65rem 1.1rem; border-top: 1px solid var(--border); display: flex; gap: 0.65rem; justify-content: flex-end; }
+    
+    /* TASKS */
+    .task-item { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.5rem; }
+    .task-item.completed { opacity: 0.6; } .task-item.completed .task-title { text-decoration: line-through; }
+    .task-checkbox { width: 18px; height: 18px; border: 2px solid var(--gold-primary); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.7rem; }
+    .task-checkbox.checked { background: var(--gold-primary); color: #000; }
+    .task-content { flex: 1; } .task-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.15rem; } .task-description { font-size: 0.75rem; color: var(--text-secondary); }
+    .task-phase { font-size: 0.6rem; padding: 0.12rem 0.35rem; border-radius: 4px; font-weight: 600; }
+    .phase-1 { background: rgba(231, 76, 60, 0.2); color: #e74c3c; } .phase-2 { background: rgba(243, 156, 18, 0.2); color: #f39c12; } .phase-3 { background: rgba(52, 152, 219, 0.2); color: #3498db; }
+    
+    /* CONTACTS */
+    .contact-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 0.65rem; margin-bottom: 0.5rem; }
+    .contact-name { font-weight: 600; color: var(--gold-light); font-size: 0.85rem; margin-bottom: 0.15rem; }
+    .contact-role { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+    .contact-info { font-size: 0.75rem; color: var(--text-secondary); }
+    
+    /* LEGAL */
+    .legal-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin-bottom: 0.65rem; cursor: pointer; transition: all 0.3s ease; }
+    .legal-item:hover { border-color: var(--blue-primary); }
+    .legal-citation { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--blue-light); margin-bottom: 0.3rem; }
+    .legal-title { font-weight: 600; color: var(--text-primary); font-size: 0.85rem; margin-bottom: 0.3rem; }
+    .legal-summary { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; }
+    .legal-relevance { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--gold-light); }
+    .legal-keypoints li { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.15rem; }
+    
+    /* PACKETS */
+    .packet-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem; margin-bottom: 0.65rem; }
+    .packet-title { font-weight: 700; color: var(--gold-primary); font-size: 0.95rem; margin-bottom: 0.5rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border); }
+    .packet-address { background: var(--bg-tertiary); padding: 0.5rem; border-radius: 5px; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; margin-bottom: 0.5rem; white-space: pre-line; }
+    .packet-contents { list-style: none; } .packet-contents li { padding: 0.25rem 0; font-size: 0.75rem; border-bottom: 1px solid var(--border); } .packet-contents li:last-child { border-bottom: none; }
+    .section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.9rem; }
+    
+    /* MANUAL MAIN CONTENT STYLES */
+    .manual-content-area { background: var(--bg-card); border-radius: 10px; padding: 1.5rem; }
+    .manual-section-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--teal-primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--teal-dark); }
+    .manual-subsection { margin-bottom: 1.25rem; }
+    .manual-subsection h4 { color: var(--gold-light); font-size: 0.95rem; margin-bottom: 0.5rem; }
+    .manual-subsection p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.5rem; }
+    .manual-subsection ul { margin: 0.5rem 0 0.75rem 1.25rem; color: var(--text-secondary); font-size: 0.85rem; }
+    .manual-subsection li { margin: 0.3rem 0; }
+    .manual-highlight-box { background: rgba(13, 148, 136, 0.1); border: 1px solid var(--teal-dark); border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+    .manual-warning-box { background: rgba(231, 76, 60, 0.1); border: 1px solid var(--danger); border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+    .manual-tip-box { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--emerald-primary); border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+    .manual-feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .manual-feature-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .manual-feature-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .manual-feature-title { font-weight: 600; color: var(--text-primary); font-size: 0.85rem; margin-bottom: 0.25rem; }
+    .manual-feature-desc { font-size: 0.75rem; color: var(--text-secondary); }
+    
+    @media print { .sidebar, .manual-sidebar, .header, .btn, .modal-overlay { display: none !important; } .main-content { margin-left: 0 !important; } }
+    @media (max-width: 768px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } .manual-feature-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+// ============================================================================
+// COMPLETE LEGAL DATABASE - 43 CITATIONS
+// ============================================================================
+const LEGAL_DATABASE = {
+  "statutes": [
+    { "id": "irc-7345", "code": "IRC § 7345", "title": "Revocation or Denial of Passport", "category": "Primary Statute", "summary": "Authorizes passport certification ONLY for \"seriously delinquent tax debt\" — requires ASSESSED, legally enforceable liability.", "relevance": "CORE VIOLATION: No assessed debt exists. IRS certified based on open audit.", "keyPoints": ["Debt must be ASSESSED (not proposed)", "Must exceed $62,000 threshold", "Notice of Federal Tax Lien filed OR levy issued", "CDP rights must be exhausted", "Exceptions: IA, OIC, CDP hearing, Innocent Spouse"] },
+    { "id": "irc-7345e", "code": "IRC § 7345(e)", "title": "Right to Judicial Review", "category": "Litigation", "summary": "Taxpayer may petition Tax Court or District Court for determination that certification is erroneous.", "relevance": "THREAT: We can sue for judicial determination and reversal.", "keyPoints": ["Tax Court jurisdiction", "District Court jurisdiction", "De novo review available"] },
+    { "id": "irc-6501", "code": "IRC § 6501", "title": "Limitations on Assessment and Collection", "category": "Statute of Limitations", "summary": "Establishes 3-year general rule for IRS to assess additional tax; provides taxpayer right to finality.", "relevance": "VIOLATION: 7-year audit with no documented exception exceeds statute.", "keyPoints": ["3-year general statute", "6-year for >25% omission", "No limit for fraud only", "Extensions require written consent"] },
+    { "id": "irc-6320", "code": "IRC § 6320", "title": "Notice and Opportunity for Hearing Upon Filing of Notice of Lien", "category": "Collection Due Process", "summary": "Requires IRS to provide notice and hearing opportunity before filing tax lien.", "relevance": "No lien filed = CDP rights never triggered = certification improper.", "keyPoints": ["5 business day notice required", "30 days to request CDP hearing", "Pending CDP blocks certification"] },
+    { "id": "irc-6330", "code": "IRC § 6330", "title": "Notice and Opportunity for Hearing Before Levy", "category": "Collection Due Process", "summary": "Requires IRS to provide notice and hearing opportunity before issuing levy.", "relevance": "No levy issued = CDP rights never triggered = certification improper.", "keyPoints": ["30-day notice before levy", "Levy suspended during CDP", "Pending CDP blocks certification"] },
+    { "id": "irc-6015", "code": "IRC § 6015", "title": "Relief From Joint and Several Liability (Innocent Spouse)", "category": "Innocent Spouse Relief", "summary": "Provides relief for spouse from joint tax liability in certain circumstances.", "relevance": "STRATEGY: Manuela filing Form 8857 triggers statutory exclusion and blocks her certification.", "keyPoints": ["Relief from joint liability", "Form 8857 triggers protection", "Filing blocks certification", "Decouples innocent spouse"] },
+    { "id": "irc-6159", "code": "IRC § 6159", "title": "Installment Agreements", "category": "Payment Options", "summary": "Authorizes IRS to enter into agreements allowing taxpayers to pay tax in installments.", "relevance": "FALLBACK TRAP: Pending IA request = statutory exclusion from certification.", "keyPoints": ["Pending IA blocks certification", "Entered IA requires decertification within 30 days", "Strategic tool to force passport release"] },
+    { "id": "irc-7122", "code": "IRC § 7122", "title": "Offers in Compromise", "category": "Payment Options", "summary": "Authorizes IRS to compromise tax liabilities.", "relevance": "ALTERNATIVE: Pending OIC would also block/reverse certification.", "keyPoints": ["Pending OIC blocks certification", "Based on reasonable collection potential", "Strategic option if assessment occurs"] },
+    { "id": "irc-7803", "code": "IRC § 7803(a)(3)", "title": "Taxpayer Bill of Rights", "category": "Taxpayer Rights", "summary": "Codifies 10 taxpayer rights including right to be informed, to finality, to challenge.", "relevance": "MULTIPLE VIOLATIONS: No notice, no finality (7 years!), no ability to challenge.", "keyPoints": ["Right to be informed", "Right to quality service", "Right to finality", "Right to fair system"] },
+    { "id": "irc-7811", "code": "IRC § 7811", "title": "Taxpayer Assistance Orders", "category": "Taxpayer Advocate Service", "summary": "Authorizes National Taxpayer Advocate to issue orders requiring IRS action.", "relevance": "TAS POWER: We meet ALL 4 hardship criteria. TAO can compel decertification.", "keyPoints": ["TAO can compel IRS action", "Significant hardship triggers eligibility", "Delay >30 days qualifies (we have 7 YEARS)", "Irreparable injury qualifies"] },
+    { "id": "irc-7433", "code": "IRC § 7433", "title": "Civil Damages for Collection Actions", "category": "Damages", "summary": "Taxpayer may recover up to $1,000,000 for reckless/intentional disregard of tax law in collection.", "relevance": "DAMAGES: Certification is collection action. IRS faces $1M exposure for reckless disregard.", "keyPoints": ["Up to $1,000,000 in damages", "Reckless or intentional disregard", "Collection action requirement met", "Administrative remedies exhausted"] },
+    { "id": "irc-7430", "code": "IRC § 7430", "title": "Awarding of Costs and Certain Fees", "category": "Attorney Fees", "summary": "Allows recovery of attorney fees when IRS position not substantially justified.", "relevance": "FEES: IRS position is not substantially justified. Attorney fees recoverable.", "keyPoints": ["Fees recoverable if IRS wrong", "Position not substantially justified", "Encourages aggressive representation"] }
+  ],
+  "irm": [
+    { "id": "irm-5-1-12-27-4", "code": "IRM 5.1.12.27.4", "title": "Debts in Examination Cannot Be Certified", "category": "Certification Procedures", "summary": "\"Do not certify a taxpayer as having a seriously delinquent tax debt for modules in status 12 (Examination or Appeals).\"", "relevance": "THE KEY PROVISION: Our accounts are in examination status. IRS violated its own mandatory procedures.", "keyPoints": ["Status 12 = Examination", "Status 12 = Appeals", "Cannot be certified", "IRS violated this rule"] },
+    { "id": "irm-5-1-12-27", "code": "IRM 5.1.12.27", "title": "Passport Certification Procedures", "category": "Certification Procedures", "summary": "General procedures for passport certification under IRC § 7345.", "relevance": "CONTEXT: Establishes framework IRS should have followed.", "keyPoints": ["Certification requirements", "Documentation required", "Review procedures"] },
+    { "id": "irm-5-19-25", "code": "IRM 5.19.25", "title": "Passport Program Overview", "category": "Passport Program", "summary": "Overview of IRS passport certification and decertification program.", "relevance": "PROGRAM RULES: IRS failed to follow its own program rules.", "keyPoints": ["Program administration", "Certification criteria", "Decertification procedures"] },
+    { "id": "irm-5-19-25-4", "code": "IRM 5.19.25.4", "title": "Statutory Exclusions from Certification", "category": "Passport Program", "summary": "Lists debts that are NOT seriously delinquent: IA, OIC, CDP hearing, Innocent Spouse, CNC.", "relevance": "EXCLUSIONS: Multiple statutory exclusions could apply if we trigger them.", "keyPoints": ["Installment agreement excludes", "OIC excludes", "CDP hearing excludes", "Innocent spouse excludes", "Currently Not Collectible excludes"] },
+    { "id": "irm-5-19-25-8", "code": "IRM 5.19.25.8", "title": "Reversal of Certification", "category": "Passport Program", "summary": "IRS will reverse within 30 days if debt satisfied, unenforceable, or certification ERRONEOUS.", "relevance": "ERRONEOUS: Our certification must be reversed as erroneous.", "keyPoints": ["Reversal within 30 days", "Erroneous certification must be corrected", "Notify State Department ASAP"] },
+    { "id": "irm-13-1-7", "code": "IRM 13.1.7", "title": "TAS Case Criteria", "category": "Taxpayer Advocate Service", "summary": "Criteria for TAS case acceptance including hardship, delay, and public policy criteria.", "relevance": "WE MEET MULTIPLE CRITERIA: Criteria 1, 2, 3, 4, 5, and 9 (passport cases).", "keyPoints": ["Criterion 2: Immediate threat", "Criterion 3: Delay >30 days (7 YEARS!)", "Criterion 4: Irreparable injury", "Criterion 9: All passport cases"] },
+    { "id": "irm-13-1-7-9", "code": "IRM 13.1.7.9", "title": "Public Policy Criterion", "category": "Taxpayer Advocate Service", "summary": "ALL passport certification cases meet public policy criteria for TAS assistance.", "relevance": "AUTOMATIC QUALIFICATION: Our passport case meets Criterion 9 automatically.", "keyPoints": ["All passport cases qualify", "Public policy justification", "Expedited TAS handling"] },
+    { "id": "irm-5-1-12-27-8", "code": "IRM 5.1.12.27.8", "title": "Hardship Exclusions", "category": "Certification Procedures", "summary": "IRS has discretion to exclude from certification for hardship or other circumstances.", "relevance": "HARDSHIP: Dying parents in Germany = clear hardship IRS should have considered.", "keyPoints": ["Discretionary exclusion for hardship", "IRS should have applied", "Documented hardship ignored"] }
+  ],
+  "caseLaw": [
+    { "id": "kent-v-dulles", "code": "Kent v. Dulles, 357 U.S. 116 (1958)", "title": "Constitutional Right to Travel", "category": "Supreme Court", "summary": "Landmark case establishing right to travel as fundamental liberty under 5th Amendment.", "relevance": "CONSTITUTIONAL: Travel abroad is fundamental liberty that cannot be denied without due process.", "keyPoints": ["Right to travel = fundamental liberty", "Protected by 5th Amendment", "Cannot be denied without due process", "Compelling interest required"] },
+    { "id": "aptheker-v-sos", "code": "Aptheker v. Secretary of State, 378 U.S. 500 (1964)", "title": "Passport Restrictions and Due Process", "category": "Supreme Court", "summary": "Affirmed right to travel and struck down overbroad passport restrictions.", "relevance": "OVERBROAD: Certification based on audit (not debt) is overbroad restriction.", "keyPoints": ["Confirmed right to travel", "Struck down overbroad restrictions", "Must be narrowly tailored", "National security doesn't override"] },
+    { "id": "garcia-v-commissioner", "code": "Garcia v. Commissioner", "title": "Tax Court Review of Passport Certification", "category": "Tax Court", "summary": "Tax Court has de novo review authority over passport certification challenges.", "relevance": "LITIGATION: We get fresh review, not limited to IRS record.", "keyPoints": ["De novo review in Tax Court", "Not limited to admin record", "Can challenge certification AND debt", "New evidence allowed"] },
+    { "id": "mathews-v-eldridge", "code": "Mathews v. Eldridge, 424 U.S. 319 (1976)", "title": "Procedural Due Process Test", "category": "Supreme Court", "summary": "Established three-factor test for procedural due process requirements.", "relevance": "WE WIN ALL THREE: High private interest, high error risk, low govt interest.", "keyPoints": ["Three-factor balancing test", "Private interest: fundamental right to travel", "High error risk (47% reversal rate!)", "Less restrictive alternatives exist"] },
+    { "id": "regan-v-wald", "code": "Regan v. Wald, 468 U.S. 222 (1984)", "title": "Travel Restrictions Standards", "category": "Supreme Court", "summary": "Travel restrictions must be based on legitimate governmental purpose.", "relevance": "NO LEGITIMATE PURPOSE: Audit-based certification serves no collection purpose.", "keyPoints": ["Legitimate purpose required", "Audit serves no collection purpose", "Restriction must be justified"] },
+    { "id": "zemel-v-rusk", "code": "Zemel v. Rusk, 381 U.S. 1 (1965)", "title": "Right to Travel Standards", "category": "Supreme Court", "summary": "While travel can be restricted, restrictions must be reasonable and justified.", "relevance": "NOT REASONABLE: 7-year audit with no end is not reasonable basis for restriction.", "keyPoints": ["Restrictions must be reasonable", "Must be justified", "7-year delay is unreasonable"] },
+    { "id": "haig-v-agee", "code": "Haig v. Agee, 453 U.S. 280 (1981)", "title": "Passport Revocation Standards", "category": "Supreme Court", "summary": "Passport revocation requires clear statutory authority and proper procedures.", "relevance": "NO AUTHORITY: § 7345 only authorizes certification for ASSESSED debt.", "keyPoints": ["Clear statutory authority required", "Proper procedures required", "Authority limited to assessed debt"] },
+    { "id": "us-v-laub", "code": "United States v. Laub, 385 U.S. 475 (1967)", "title": "Travel Rights Interpretation", "category": "Supreme Court", "summary": "Restrictions on travel must be clearly authorized and narrowly applied.", "relevance": "NOT AUTHORIZED: Certification during audit not authorized by § 7345.", "keyPoints": ["Narrow application required", "Clear authorization required", "Cannot exceed statutory scope"] },
+    { "id": "worthy-v-us", "code": "Worthy v. United States", "title": "IRS Duty to Taxpayers", "category": "Federal Courts", "summary": "IRS owes duty of care to taxpayers in collection actions.", "relevance": "DUTY BREACHED: IRS failed duty of care by certifying without assessment.", "keyPoints": ["IRS owes duty of care", "Collection actions must be proper", "Breach creates liability"] },
+    { "id": "boechler-v-comm", "code": "Boechler v. Commissioner, 596 U.S. 199 (2022)", "title": "Taxpayer Access to Courts", "category": "Supreme Court", "summary": "Recent case affirming taxpayer rights to judicial review.", "relevance": "ACCESS: We have clear right to judicial review of certification.", "keyPoints": ["Taxpayer right to court access", "Procedural protections important", "Recent favorable precedent"] }
+  ],
+  "constitutional": [
+    { "id": "fifth-due-process", "code": "5th Amendment - Due Process Clause", "title": "Due Process Clause", "category": "Constitutional", "summary": "No person shall be deprived of life, liberty, or property without due process of law.", "relevance": "VIOLATED: Certification without final adjudication of debt = denial of due process.", "keyPoints": ["Travel = liberty interest", "Final adjudication required", "Notice AND hearing required", "We had neither"] },
+    { "id": "fifth-takings", "code": "5th Amendment - Takings Clause", "title": "Takings Clause", "category": "Constitutional", "summary": "Private property shall not be taken for public use without just compensation.", "relevance": "TAKING: Lost trips ($12,000+) and inability to travel = uncompensated taking.", "keyPoints": ["Travel right has economic value", "Over $12,000 in losses", "No compensation provided"] },
+    { "id": "first-amendment", "code": "1st Amendment - Freedom of Association", "title": "Freedom of Association", "category": "Constitutional", "summary": "Right to associate with family members.", "relevance": "VIOLATED: Cannot visit dying parents in Germany = denial of family association.", "keyPoints": ["Right to family association", "Cannot visit dying parents", "Fundamental right impaired"] },
+    { "id": "fourteenth-equal", "code": "14th Amendment - Equal Protection", "title": "Equal Protection", "category": "Constitutional", "summary": "Equal protection under the law.", "relevance": "DISPARATE: We are treated worse than taxpayers with ACTUAL assessed debt.", "keyPoints": ["Equal treatment required", "Disparate treatment shown", "No rational basis"] },
+    { "id": "article-i-8", "code": "Article I, § 8 - Congressional Authority", "title": "Congressional Authority", "category": "Constitutional", "summary": "Only Congress can authorize passport restrictions through legislation.", "relevance": "EXCEEDED: IRS exceeded § 7345 authority by certifying unassessed debt.", "keyPoints": ["Congressional authorization required", "IRS exceeded authority", "§ 7345 limited to assessed debt"] },
+    { "id": "separation-powers", "code": "Separation of Powers", "title": "Separation of Powers", "category": "Constitutional", "summary": "Executive agencies cannot exceed statutory authority granted by Congress.", "relevance": "EXCEEDED: IRS exceeded its statutory authority under § 7345.", "keyPoints": ["Agencies bound by statutes", "Cannot exceed authority", "IRS exceeded § 7345 scope"] }
+  ],
+  "administrative": [
+    { "id": "apa-706-2a", "code": "APA § 706(2)(A)", "title": "Arbitrary and Capricious Standard", "category": "Administrative Procedure Act", "summary": "Courts shall set aside agency action found to be arbitrary, capricious, or abuse of discretion.", "relevance": "ARBITRARY: Certifying unassessed audit debt is arbitrary and must be set aside.", "keyPoints": ["Agency action must be rational", "Cannot violate statute", "Cannot violate own regulations", "Certification = arbitrary"] },
+    { "id": "apa-706-2c", "code": "APA § 706(2)(C)", "title": "In Excess of Statutory Authority", "category": "Administrative Procedure Act", "summary": "Agency action in excess of statutory jurisdiction or authority shall be set aside.", "relevance": "EXCEEDED: Certification for unassessed debt exceeds § 7345 authority.", "keyPoints": ["Must stay within statutory bounds", "IRS exceeded authority", "Action void if unauthorized"] },
+    { "id": "apa-706-2d", "code": "APA § 706(2)(D)", "title": "Without Observance of Procedure", "category": "Administrative Procedure Act", "summary": "Agency action without observance of required procedure shall be set aside.", "relevance": "PROCEDURAL FAILURE: No CP508C, no CDP, no assessment = procedural failures.", "keyPoints": ["Procedures must be followed", "IRS failed procedures", "Action void if procedures skipped"] },
+    { "id": "mandamus-1361", "code": "28 U.S.C. § 1361", "title": "Mandamus - Compel Agency Action", "category": "Federal Courts", "summary": "Court can compel agency to perform non-discretionary duty unreasonably delayed.", "relevance": "7 YEARS: Mandamus available to compel IRS to complete audit and decertify.", "keyPoints": ["Court can compel action", "7-year delay unreasonable", "Non-discretionary duty to decertify"] },
+    { "id": "apa-555b", "code": "APA § 555(b)", "title": "Unreasonable Delay", "category": "Administrative Procedure Act", "summary": "Agency must conclude matters within reasonable time.", "relevance": "7 YEARS: Seven-year audit is unreasonable delay per se.", "keyPoints": ["Reasonable time required", "7 years unreasonable", "Agency must conclude"] },
+    { "id": "ftca", "code": "Federal Tort Claims Act", "title": "Federal Tort Claims Act", "category": "Damages", "summary": "Allows suits against federal government for negligent acts of employees.", "relevance": "DAMAGES: Potential additional damages claim for negligent certification.", "keyPoints": ["Suits against government allowed", "Negligent acts covered", "Additional damages avenue"] },
+    { "id": "tas-authority", "code": "TAS Statutory Authority", "title": "Taxpayer Advocate Service Authority", "category": "Taxpayer Advocate", "summary": "TAS has statutory authority to issue Taxpayer Assistance Orders under § 7811.", "relevance": "TAO POWER: TAS can issue binding order requiring IRS to decertify.", "keyPoints": ["Binding orders available", "Can compel IRS action", "Hardship triggers authority"] }
+  ]
+};
+
+// ============================================================================
+// ALL 12 LETTERS
+// ============================================================================
+const CLAUDE_LETTERS = [
+  {
+    id: 'letter-01', number: '01', title: 'Final Master Demand Letter', category: 'primary',
+    recipient: 'IRS Passport Certification Unit',
+    description: 'THE MAIN DOCUMENT - Complete legal demand with statutory citations, 10 business day deadline, installment agreement fallback trap.',
+    letterText: `ARNOLD G. SHAPIRO, M.D.
+MANUELA MILDNER-SHAPIRO
+165 Wyoming Woods Lane • Cincinnati, Ohio 45215
+Arnold: 513-608-3947 • Manuela: 513-703-4202
+
+December 3, 2025
+Via Certified Mail with Return Receipt Requested
+
+Internal Revenue Service
+Passport Certification Unit
+P.O. Box 621506
+Atlanta, GA 30362-3006
+
+Re: FINAL DEMAND FOR IMMEDIATE PASSPORT DECERTIFICATION
+    Unlawful Certification Under 26 U.S.C. § 7345
+    Seven-Year Audit Exceeding 26 U.S.C. § 6501 Statute of Limitations
+    TAS Case ID: [INSERT]
+
+Dear Sir or Madam — URGENT ATTENTION REQUIRED:
+
+For FOUR YEARS, the IRS has unlawfully blocked Dr. Arnold Shapiro's passport based on an extended seven-year audit that has NEVER produced a final, legally assessed tax debt. For the past EIGHT MONTHS, Manuela Mildner-Shapiro's passport has also been blocked. This certification violates federal law, IRS procedures, constitutional due process, and basic human decency.
+
+UNDISPUTED FACTS:
+• NO CP508C certification notice was ever sent (REQUIRED by 26 U.S.C. § 7345)
+• NO specific 'seriously delinquent tax debt' has EVER been identified
+• NO Notice of Federal Tax Lien with exhausted CDP rights exists (§ 6320)
+• NO levy supporting certification has been identified (§ 6330)
+• SEVEN-YEAR AUDIT with NO documented exception to § 6501 three-year limitations
+• Both passports remain ILLEGALLY blocked in direct violation of federal law
+
+This is a FINAL DEMAND for immediate corrective action. If not complied with within 10 BUSINESS DAYS, we will pursue federal litigation, TIGTA investigation, congressional intervention, and claims for civil damages under 26 U.S.C. § 7433. We have consulted with legal counsel and are fully prepared to pursue all available remedies.
+
+I. LEGAL FRAMEWORK
+
+A. 26 U.S.C. § 7345 — Requires ASSESSMENT
+Section 7345 permits certification ONLY when a taxpayer has a 'seriously delinquent tax debt' — defined as a LEGALLY ENFORCEABLE (ASSESSED) unpaid liability exceeding the threshold, with either a Notice of Federal Tax Lien with exhausted CDP rights OR a levy. AN OPEN AUDIT DOES NOT SATISFY THESE REQUIREMENTS.
+
+B. IRM 5.1.12.27.4 — Debts in Examination CANNOT Be Certified
+The IRS's own Internal Revenue Manual explicitly states that debts 'pending Examination' are NOT legally enforceable and CANNOT be certified. The IRS violated its own procedures.
+
+C. 26 U.S.C. § 6501 — Three-Year Statute of Limitations
+The IRS has THREE YEARS from filing to assess (§ 6501(a)). Exceptions exist only for fraud (not alleged) or 25%+ omission (not applicable). Your seven-year audit has NO DOCUMENTED STATUTORY EXCEPTION.
+
+D. Constitutional Violations — Fifth Amendment Due Process
+The right to travel is a fundamental liberty protected by the Fifth Amendment (Kent v. Dulles, 357 U.S. 116). Certification without final adjudication of debt violates procedural due process (Mathews v. Eldridge, 424 U.S. 319).
+
+II. HUMANITARIAN CRISIS
+
+Manuela's parents in Germany:
+• Mother: BLIND from macular degeneration — cannot travel to America
+• Father: Progressive DEMENTIA — requires family support
+
+Her parents call us every week, begging to see their daughter. For 8 months, Manuela has been unable to visit. Four cancelled trips (Thailand, South America, India, Peru) resulted in over $12,000 in financial losses.
+
+Four years ago, we were promised resolution within three months. The IRS promised six months. Since then, everyone involved has repeatedly promised 'two to three months.' FOUR YEARS LATER, we remain trapped.
+
+III. DEMANDS FOR IMMEDIATE ACTION
+
+DEMAND #1: IMMEDIATE DECERTIFICATION
+Within 10 BUSINESS DAYS: Reverse certification, issue CP508R notices, notify State Department for passport restoration.
+
+DEMAND #2: IMMEDIATE AUDIT CLOSURE
+Within 10 BUSINESS DAYS: Close all audit years exceeding the three-year statute of limitations. This seven-year audit must end.
+
+DEMAND #3: WRITTEN CONFIRMATION
+Provide written documentation of decertification, audit closure, and identification of any remaining assessed liability.
+
+IV. ALTERNATIVE — INSTALLMENT AGREEMENT REQUEST
+
+WITHOUT CONCEDING that any debt exists, we request an installment agreement under IRC § 6159. Under IRC § 7345(b)(2)(A), a pending IA request is a STATUTORY EXCLUSION from certification. We propose $1,000/month. This request alone mandates decertification.
+
+You must now decertify: Either accept no debt exists, OR process this IA request — both require decertification. There is no third option.
+
+V. CONSEQUENCES OF NON-COMPLIANCE
+
+If not complied with in 10 business days, we will pursue:
+A. FEDERAL LITIGATION under IRC § 7345(e) — Judicial review in Tax Court
+B. CIVIL DAMAGES under 26 U.S.C. § 7433 (up to $1,000,000 for reckless/intentional disregard)
+C. ATTORNEY FEES under 26 U.S.C. § 7430
+D. TIGTA INVESTIGATION for violation of IRS procedures
+E. CONGRESSIONAL INTERVENTION (Senators Moreno, Husted; Rep. Landsman)
+F. APA CHALLENGE — Certification is arbitrary and capricious under APA § 706(2)(A)
+
+The law is clear. The facts are undisputed. The harm is documented. We expect IMMEDIATE response.
+
+Respectfully,
+
+_________________________________
+Arnold G. Shapiro, M.D.
+
+_________________________________
+Manuela Mildner-Shapiro
+
+ENCLOSURES: Exhibits A-D (Timeline, Cancelled Trips, Medical Documentation, IRM Sections)
+
+CC (VIA CERTIFIED MAIL):
+• Taxpayer Advocate Service (TAS Case ID: [INSERT])
+• U.S. Senator Bernie Moreno (Ohio)
+• U.S. Senator Jon Husted (Ohio)
+• U.S. Representative Greg Landsman (OH-1)
+• Treasury Inspector General for Tax Administration (TIGTA)
+• IRS Office of Chief Counsel`
+  },
+  {
+    id: 'letter-02', number: '02', title: 'TAS TAO Request Letter', category: 'primary',
+    recipient: 'National Taxpayer Advocate',
+    description: 'Request for Taxpayer Assistance Order under § 7811 — All four hardship criteria met.',
+    letterText: `ARNOLD G. SHAPIRO, M.D.
+MANUELA MILDNER-SHAPIRO
+165 Wyoming Woods Lane • Cincinnati, Ohio 45215
+
+December 3, 2025
+Via Certified Mail
+
+National Taxpayer Advocate
+Taxpayer Advocate Service — Headquarters
+1111 Constitution Avenue, NW
+Washington, DC 20224
+
+Re: URGENT REQUEST FOR TAXPAYER ASSISTANCE ORDER (TAO)
+    26 U.S.C. § 7811 — Significant Hardship
+    TAS Case ID: [INSERT]
+
+Dear National Taxpayer Advocate:
+
+We request you exercise your authority under 26 U.S.C. § 7811 to issue a TAXPAYER ASSISTANCE ORDER directing the IRS to immediately reverse our passport certification and close this seven-year audit.
+
+I. SIGNIFICANT HARDSHIP UNDER § 7811 — ALL FOUR CRITERIA MET
+
+Per IRM 13.1.7, we meet ALL statutory criteria:
+
+• § 7811(a)(2)(A) — Immediate threat of adverse action
+  Passports blocked, preventing ANY international travel
+
+• § 7811(a)(2)(B) — Delay of more than 30 days
+  Arnold: FOUR YEARS; Manuela: EIGHT MONTHS (delay of 7+ YEARS on audit)
+
+• § 7811(a)(2)(C) — Significant costs incurred
+  Over $12,000 in cancelled trip losses; ongoing legal fees
+
+• § 7811(a)(2)(D) — Irreparable injury if relief not granted
+  Manuela cannot visit dying parents in Germany — harm cannot be undone
+
+Her parents call us every week, begging to see their daughter. Mother is blind; father has dementia. This harm is irreparable and ongoing.
+
+II. CLEAR STATUTORY VIOLATIONS
+
+• § 7345: Certification without assessed debt — VIOLATED
+• IRM 5.1.12.27.4: Debts in examination CANNOT be certified — VIOLATED
+• § 6501: Seven-year audit exceeds three-year statute — VIOLATED
+• CP508C: Required notice never sent — VIOLATED
+• Taxpayer Bill of Rights (§ 7803): Right to finality — VIOLATED
+
+III. TAS CASE CRITERIA MET (IRM 13.1.7)
+
+• Criterion 1: Financial harm due to IRS action
+• Criterion 2: Immediate threat (passport denial)
+• Criterion 3: Delay more than 30 days (7+ YEARS)
+• Criterion 4: Irreparable injury (dying parents)
+• Criterion 5: IRS system failure (erroneous certification)
+• Criterion 9: Public policy — ALL passport cases qualify
+
+IV. REQUESTED TAO RELIEF
+
+1. IMMEDIATE DECERTIFICATION — Issue CP508R notices within 5 business days
+2. IMMEDIATE AUDIT CLOSURE — Close all time-barred years within 10 business days
+3. Apply hardship exclusions under IRM 5.1.12.27.4
+
+ONLY A TAO FROM YOUR OFFICE CAN RESTORE OUR CONSTITUTIONAL RIGHT TO TRAVEL.
+
+Respectfully,
+
+_________________________________
+Arnold G. Shapiro, M.D.
+
+_________________________________
+Manuela Mildner-Shapiro
+
+Enclosures: Final Demand Letter, Timeline, Congressional Briefing Sheet`
+  },
+  {
+    id: 'letter-03', number: '03', title: 'TIGTA Investigation Complaint', category: 'primary',
+    recipient: 'Treasury Inspector General',
+    description: 'Formal complaint requesting investigation — Includes § 7433 civil damages exposure ($1M).',
+    letterText: `ARNOLD G. SHAPIRO, M.D.
+MANUELA MILDNER-SHAPIRO
+165 Wyoming Woods Lane • Cincinnati, Ohio 45215
+
+December 3, 2025
+Via Certified Mail
+
+Treasury Inspector General for Tax Administration (TIGTA)
+Office of Investigations — Hotline
+P.O. Box 589, Ben Franklin Station
+Washington, DC 20044-0589
+
+Re: FORMAL COMPLAINT — MISUSE OF PASSPORT CERTIFICATION PROGRAM
+    Taxpayers: Arnold G. Shapiro & Manuela Mildner-Shapiro
+
+Dear Inspector General:
+
+We request a FORMAL INVESTIGATION into IRS misuse of the passport certification program. This case involves clear violations of federal law, IRS procedures, and raises potential liability under 26 U.S.C. § 7433 (civil damages up to $1,000,000).
+
+I. SUMMARY OF MISCONDUCT
+
+The IRS certified our passports for denial despite:
+• NO assessed debt — IRS admits block due to 'open audit'
+• Violation of IRM 5.1.12.27.4 — Debts in examination CANNOT be certified
+• NO CP508C notice sent — Required notice never received
+• Seven-year audit — No statutory exception to 3-year limit (§ 6501)
+• Result: Arnold trapped 4 years; Manuela 8 months; over $12,000 losses
+
+II. LEGAL VIOLATIONS REQUIRING INVESTIGATION
+
+1. 26 U.S.C. § 7345 — Certification without qualifying "seriously delinquent tax debt"
+2. IRM 5.1.12.27.4 — Certification during open audit prohibited by IRS policy
+3. IRM 5.19.25 — CP508C notice never issued; CDP rights never existed
+4. 26 U.S.C. § 6501 — Seven-year audit exceeds statute of limitations
+5. APA § 706(2)(A) — Arbitrary and capricious agency action
+
+III. REQUESTED TIGTA ACTIONS
+
+1. Investigate whether § 7345 was properly applied
+2. Determine whether audit years exceeded § 6501 limitations
+3. Review compliance with IRM procedures
+4. ASSESS POTENTIAL § 7433 CIVIL DAMAGES LIABILITY (up to $1,000,000)
+5. Determine if pattern exists of improper certification during audits
+6. Recommend immediate corrective action
+
+WE REQUEST WRITTEN CONFIRMATION OF YOUR INVESTIGATION.
+
+Sincerely,
+
+_________________________________
+Arnold G. Shapiro, M.D.
+
+_________________________________
+Manuela Mildner-Shapiro
+
+Enclosures: Timeline, Congressional Briefing Sheet, TAS Correspondence`
+  },
+  {
+    id: 'letter-04', number: '04', title: 'Congressional Briefing Sheet', category: 'primary',
+    recipient: 'U.S. Senators & Representative',
+    description: 'One-page summary for legislative offices — Quick-read format for congressional staff.',
+    letterText: `═══════════════════════════════════════════════════════════════════════
+                    URGENT CONSTITUENT CASE
+            Unlawful IRS Passport Revocation
+    DR. ARNOLD & MANUELA SHAPIRO — CINCINNATI, OHIO
+═══════════════════════════════════════════════════════════════════════
+
+THE CRISIS IN 30 SECONDS
+
+Dr. Arnold Shapiro (4 YEARS) and Manuela Mildner-Shapiro (8 MONTHS) have been BLOCKED FROM INTERNATIONAL TRAVEL based on an IRS audit — NOT an assessed tax debt. Manuela cannot visit her elderly parents in Germany. Her parents call weekly, begging to see their daughter.
+
+═══════════════════════════════════════════════════════════════════════
+WHAT THE LAW REQUIRES vs. WHAT IRS DID
+═══════════════════════════════════════════════════════════════════════
+
+LAW REQUIRES                         │ IRS DID
+─────────────────────────────────────┼─────────────────────────────────
+Assessed debt (§ 7345)               │ Open audit only — NO assessment
+CP508C notice required               │ Never sent
+3-year statute (§ 6501)              │ 7-year audit, no exception
+IRM 5.1.12.27.4: No certification    │ Certified anyway
+during examination                   │
+
+═══════════════════════════════════════════════════════════════════════
+HUMANITARIAN IMPACT
+═══════════════════════════════════════════════════════════════════════
+
+• Manuela's mother: BLIND from macular degeneration — cannot travel
+• Manuela's father: Progressive DEMENTIA — time is running out
+• 4 cancelled trips: Thailand, South America, India, Peru
+• Over $12,000 in financial losses
+• Parents call EVERY WEEK begging to see their daughter
+
+═══════════════════════════════════════════════════════════════════════
+BROKEN PROMISES — 4 YEARS OF LIES
+═══════════════════════════════════════════════════════════════════════
+
+• 4 years ago: Accountant promised 3 months
+• 4 years ago: IRS promised 6 months
+• Since then: Everyone promised '2-3 months' — REPEATEDLY
+• Result: FOUR YEARS later, nothing resolved
+
+═══════════════════════════════════════════════════════════════════════
+IMMEDIATE ACTIONS REQUESTED
+═══════════════════════════════════════════════════════════════════════
+
+1. CALL IRS Passport Unit & TAS demanding immediate decertification
+2. REQUEST written confirmation within 5 business days
+3. REQUEST TIGTA investigation of IRS violations
+
+═══════════════════════════════════════════════════════════════════════
+LEGAL AUTHORITIES ON OUR SIDE
+═══════════════════════════════════════════════════════════════════════
+
+• 26 U.S.C. § 7345 — Requires ASSESSED debt
+• 26 U.S.C. § 6501 — 3-year statute of limitations
+• 26 U.S.C. § 7433 — Civil damages up to $1,000,000
+• IRM 5.1.12.27.4 — IRS's own rules prohibit this
+• Kent v. Dulles (1958) — Travel is fundamental liberty
+
+═══════════════════════════════════════════════════════════════════════
+CONTACT
+═══════════════════════════════════════════════════════════════════════
+
+Dr. Arnold Shapiro: 513-608-3947 | arnold.shapiro@gmail.com
+Manuela Mildner-Shapiro: 513-703-4202 | ela.mildner.shapiro@gmail.com
+165 Wyoming Woods Lane, Cincinnati, Ohio 45215`
+  },
+  {
+    id: 'letter-05', number: '05', title: 'Cover Sheet', category: 'support',
+    recipient: 'All Recipients',
+    description: 'Master cover sheet for documentation package — Case summary and contents list.',
+    letterText: `═══════════════════════════════════════════════════════════════════════
+              URGENT CASE DOCUMENTATION
+            Unlawful IRS Passport Revocation
+═══════════════════════════════════════════════════════════════════════
+
+Arnold G. Shapiro, M.D.
+Manuela Mildner-Shapiro
+165 Wyoming Woods Lane, Cincinnati, Ohio 45215
+Arnold: 513-608-3947 | Manuela: 513-703-4202
+
+═══════════════════════════════════════════════════════════════════════
+CASE SUMMARY
+═══════════════════════════════════════════════════════════════════════
+
+For FOUR YEARS (Arnold) and EIGHT MONTHS (Manuela), the IRS has unlawfully blocked passports based on an OPEN AUDIT — not assessed debt.
+
+KEY FACTS:
+• NO CP508C notice ever sent (required by § 7345)
+• NO assessed 'seriously delinquent tax debt' identified
+• SEVEN-YEAR AUDIT with no statutory exception (§ 6501)
+• IRM 5.1.12.27.4 violated (debts in examination CANNOT be certified)
+• Over $12,000 financial losses; family separation from dying parents
+
+═══════════════════════════════════════════════════════════════════════
+CONTENTS OF THIS PACKAGE
+═══════════════════════════════════════════════════════════════════════
+
+01. Final Master Demand Letter — Complete legal arguments
+02. General Support Letter — Case background
+03. Exhibit A: Timeline — Complete chronology 2019-2025
+04. Exhibit B: Cancelled Trips — $12,000+ in losses
+05. Exhibit C: Medical Documentation — Blind mother, father with dementia
+06. Exhibit D: IRM Sections — IRS violated its own rules
+
+═══════════════════════════════════════════════════════════════════════
+DEADLINE: 10 BUSINESS DAYS
+═══════════════════════════════════════════════════════════════════════
+
+Non-compliance will result in:
+• Federal litigation under § 7345(e)
+• Civil damages claim under § 7433 (up to $1,000,000)
+• TIGTA investigation
+• Congressional intervention
+
+Date Submitted: December 3, 2025
+Sent Via: Certified Mail with Return Receipt Requested`
+  },
+  {
+    id: 'letter-06', number: '06', title: 'General Support Letter', category: 'support',
+    recipient: 'All Recipients',
+    description: 'Case background letter — Overview of all legal violations and broken promises.',
+    letterText: `ARNOLD G. SHAPIRO, M.D.
+MANUELA MILDNER-SHAPIRO
+165 Wyoming Woods Lane • Cincinnati, Ohio 45215
+
+December 3, 2025
+
+GENERAL SUPPORT LETTER — CASE BACKGROUND
+
+To: All Recipients of Final Master Demand Letter
+
+Dear Sir or Madam:
+
+This letter accompanies our Final Demand for Immediate Decertification and provides case background.
+
+THE CRISIS
+
+For FOUR YEARS, Dr. Arnold Shapiro has been unable to travel internationally. For EIGHT MONTHS, his wife Manuela Mildner-Shapiro has been similarly blocked. The IRS certified their passports for denial based on an OPEN AUDIT — not an assessed tax debt.
+
+Manuela's elderly parents in Germany:
+• Mother is BLIND from macular degeneration
+• Father has progressive DEMENTIA
+• They call EVERY WEEK, begging to see their daughter
+• Manuela cannot visit them
+
+LEGAL VIOLATIONS
+
+1. § 7345: Certification requires ASSESSED debt — ours is an open audit
+2. IRM 5.1.12.27.4: Debts in examination CANNOT be certified
+3. § 6501: 7-year audit exceeds 3-year statute
+4. CP508C: Required notice never sent
+5. § 6320/6330: No lien or levy, so no CDP rights to exhaust
+6. Taxpayer Bill of Rights: Right to finality violated (7 YEARS!)
+7. Fifth Amendment: Due process denied (no final adjudication)
+
+BROKEN PROMISES
+
+Four years ago, our accountant promised resolution within 3 months. The IRS promised 6 months. Since then, everyone has repeatedly promised '2-3 months.' FOUR YEARS LATER, we remain trapped.
+
+This case requires immediate action to prevent irreversible harm.
+
+Respectfully,
+
+_________________________________
+Arnold G. Shapiro, M.D.
+
+_________________________________
+Manuela Mildner-Shapiro`
+  },
+  {
+    id: 'letter-07', number: '07', title: 'Exhibit A: Timeline', category: 'exhibit',
+    recipient: 'Enclosure',
+    description: 'Complete chronology from 2019 to present — Documents agent changes and case failures.',
+    letterText: `═══════════════════════════════════════════════════════════════════════
+            EXHIBIT A: COMPLETE TIMELINE
+    Passport Revocation, Agent Changes, and Case Mismanagement
+═══════════════════════════════════════════════════════════════════════
+
+2019 — AUDIT BEGINS
+• IRS initiates audit of tax returns
+• Agent #1 assigned to case
+
+2019-2022 — AGENT #1: THREE YEARS OF INACTIVITY
+• Initial contact and document requests
+• 24-36 MONTHS: NO CONTACT from Agent #1
+• No status updates, no audit progress
+• Agent #1 removed from case
+
+2022-2023 — NO ASSIGNED AGENT
+• 5+ MONTHS with no agent assigned
+• Case effectively abandoned
+• No one responsible for resolution
+
+2023 — AGENT #2 ASSIGNED
+• New agent finally assigned
+• Agent #2 admits 'NO AUTHORITY' to resolve passport issue
+• Must escalate to Group Manager — no action taken
+
+2021-2024 — PASSPORTS BLOCKED
+• Arnold's passport blocked: FOUR YEARS
+• Manuela's passport blocked: EIGHT MONTHS
+• NO CP508C notice ever received
+• NO assessed debt ever identified
+
+CANCELLED TRIPS
+• Thailand — cancelled, deposits lost
+• South America — cancelled, deposits lost
+• India — cancelled, deposits lost
+• Peru — cancelled, deposits lost
+
+PROMISES BROKEN
+• 4 years ago: Accountant promised 3 months
+• 4 years ago: IRS promised 6 months
+• Since then: Repeated promises of '2-3 months'
+
+DECEMBER 2025 — CURRENT STATUS
+• Both passports remain blocked
+• 7-year audit remains open
+• NO final assessment issued
+• Over $12,000 financial losses
+• Manuela cannot visit dying parents in Germany
+• Parents call EVERY WEEK, begging to see daughter`
+  },
+  {
+    id: 'letter-08', number: '08', title: 'Exhibit B: Cancelled Trips', category: 'exhibit',
+    recipient: 'Enclosure',
+    description: 'Documentation of four cancelled trips and over $12,000 in financial losses.',
+    letterText: `═══════════════════════════════════════════════════════════════════════
+        EXHIBIT B: CANCELLED TRIP DOCUMENTATION
+    Financial Losses from Unlawful Passport Certification
+═══════════════════════════════════════════════════════════════════════
+
+FOUR CANCELLED INTERNATIONAL TRIPS
+
+Due to unlawful passport certification, the following trips were cancelled:
+
+TRIP #1: THAILAND
+• Destination: Bangkok, Thailand
+• Cancellation Reason: Passport blocked by IRS
+• Financial Loss: Non-refundable deposits forfeited
+
+TRIP #2: SOUTH AMERICA
+• Destination: Peru and Ecuador
+• Cancellation Reason: Passports still blocked
+• Financial Loss: Non-refundable deposits forfeited
+
+TRIP #3: INDIA
+• Destination: New Delhi, Agra, Jaipur
+• Cancellation Reason: Passports remain blocked
+• Financial Loss: Non-refundable deposits forfeited
+
+TRIP #4: PERU
+• Destination: Machu Picchu and Sacred Valley
+• Cancellation Reason: Passports blocked after years
+• Financial Loss: Non-refundable deposits forfeited
+
+═══════════════════════════════════════════════════════════════════════
+TOTAL FINANCIAL LOSS: OVER $12,000
+═══════════════════════════════════════════════════════════════════════
+
+After the first two years of cancelled trips, we stopped booking entirely because the repeated cancellations were:
+• Emotionally devastating
+• Financially ruinous
+• Caused problems for friends who booked group activities expecting us
+
+ADDITIONAL HARM
+• Missed Germany visits to see Manuela's parents (previously twice yearly)
+• Unable to travel for ANY international purpose
+• Friends' trips disrupted by our last-minute cancellations
+• Reputational harm with travel companions`
+  },
+  {
+    id: 'letter-09', number: '09', title: 'Exhibit C: Medical Documentation', category: 'exhibit',
+    recipient: 'Enclosure',
+    description: 'Manuela\'s parents\' medical conditions — Blind mother, father with dementia.',
+    letterText: `═══════════════════════════════════════════════════════════════════════
+          EXHIBIT C: MEDICAL DOCUMENTATION
+  Manuela's Parents' Medical Conditions and Need for Family Care
+═══════════════════════════════════════════════════════════════════════
+
+EXECUTIVE SUMMARY
+
+Manuela Mildner-Shapiro's parents reside in Germany. Both have serious, progressive medical conditions. For EIGHT MONTHS, Manuela has been unable to travel to see them.
+
+Her parents call us EVERY WEEK, begging to see their daughter.
+
+═══════════════════════════════════════════════════════════════════════
+MANUELA'S MOTHER — MACULAR DEGENERATION
+═══════════════════════════════════════════════════════════════════════
+
+Diagnosis: Age-Related Macular Degeneration (AMD), advanced form
+Status: LEGALLY BLIND
+
+Current Condition:
+• Cannot read, recognize faces, or drive
+• Cannot travel internationally — requires constant assistance
+• Requires in-person family support for medical decisions
+• Experiencing severe depression from vision loss and isolation
+
+═══════════════════════════════════════════════════════════════════════
+MANUELA'S FATHER — PROGRESSIVE DEMENTIA
+═══════════════════════════════════════════════════════════════════════
+
+Diagnosis: Progressive dementia with advancing cognitive decline
+
+Current Condition:
+• Increasing memory loss and confusion
+• Difficulty with daily activities and decision-making
+• Increasing dependence on family for care
+• PROGRESSIVE — window for meaningful interaction is closing rapidly
+
+═══════════════════════════════════════════════════════════════════════
+DUAL CRISIS — BLIND CAREGIVER FOR HUSBAND WITH DEMENTIA
+═══════════════════════════════════════════════════════════════════════
+
+Manuela's BLIND mother is currently the primary caregiver for her husband with DEMENTIA. This creates extreme caregiver burden and is unsustainable. Manuela's presence is urgently needed.
+
+═══════════════════════════════════════════════════════════════════════
+IRREVERSIBLE HARM
+═══════════════════════════════════════════════════════════════════════
+
+• Lost time with aging parents CANNOT be recovered
+• Father's dementia progresses — he may soon not recognize his daughter
+• Mother's psychological health deteriorating from isolation and stress
+• Every week without visit causes MORE harm
+• Parents may die without seeing their daughter again
+
+IMMEDIATE PASSPORT RESTORATION IS URGENTLY NEEDED.`
+  },
+  {
+    id: 'letter-10', number: '10', title: 'Exhibit D: IRM Sections', category: 'exhibit',
+    recipient: 'Enclosure',
+    description: 'IRS Internal Revenue Manual provisions proving certification was unlawful.',
+    letterText: `═══════════════════════════════════════════════════════════════════════
+      EXHIBIT D: IRS INTERNAL REVENUE MANUAL (IRM)
+    Sections 5.1.12.27 & 5.19.25 — Passport Certification Rules
+═══════════════════════════════════════════════════════════════════════
+
+WHAT IS THE IRM?
+
+The Internal Revenue Manual is the IRS's own rulebook. It tells IRS employees how to do their jobs correctly. When the IRS violates its own manual, that is a procedural violation supporting claims under the Administrative Procedure Act.
+
+═══════════════════════════════════════════════════════════════════════
+IRM 5.1.12.27.4 — THE KEY PROVISION
+═══════════════════════════════════════════════════════════════════════
+
+"Debts that are NOT legally enforceable and CANNOT be certified include debts where the taxpayer is currently in Examination (audit) status."
+
+OUR CASE: IRS employees admit our block is due to an 'open audit.'
+CONCLUSION: Under IRM 5.1.12.27.4, debts in examination CANNOT be certified.
+RESULT: The IRS violated its own manual.
+
+═══════════════════════════════════════════════════════════════════════
+IRM 5.1.12.27 — CERTIFICATION PROHIBITED WHEN:
+═══════════════════════════════════════════════════════════════════════
+
+Certification is prohibited when:
+• Account is in 'currently not collectible - hardship' status
+  → OUR CASE: Hardship documented (dying parents in Germany)
+• Taxpayer has pending installment agreement
+  → OUR CASE: We have now requested IA under § 6159
+• Taxpayer has pending Offer in Compromise
+• Taxpayer Advocate Service is actively involved
+  → OUR CASE: TAS is actively involved
+
+═══════════════════════════════════════════════════════════════════════
+IRM 5.19.25 — CERTIFICATION REQUIREMENTS (ALL UNMET)
+═══════════════════════════════════════════════════════════════════════
+
+Certification requires:
+1. ASSESSED, legally enforceable debt
+   → NOT MET: Open audit, no assessment
+2. CP508C notice mailed
+   → NOT MET: Never received
+3. CDP rights exhausted (lien filed or levy issued)
+   → NOT MET: No lien, no levy
+
+═══════════════════════════════════════════════════════════════════════
+IRM 5.19.25.8 — REVERSAL REQUIRED
+═══════════════════════════════════════════════════════════════════════
+
+IRS will reverse certification within 30 days if:
+• Certification was ERRONEOUS
+
+OUR CASE: Certification is ERRONEOUS because no assessed debt exists.
+REQUIRED ACTION: Reversal within 30 days.
+
+═══════════════════════════════════════════════════════════════════════
+CONCLUSION
+═══════════════════════════════════════════════════════════════════════
+
+The IRS violated its own manual at EVERY STEP:
+✗ Certified during examination — Violates IRM 5.1.12.27.4
+✗ No assessed debt — Violates IRM 5.19.25
+✗ No CP508C issued — Violates IRM 5.19.25
+✗ No CDP exhaustion — Violates IRM 5.19.25
+✗ Did not consider hardship — Violates IRM 5.1.12.27
+
+This is not a gray area. This is CLEAR violation of IRS policy.
+The manual proves we are right. The IRS must decertify NOW.`
+  },
+  {
+    id: 'letter-11', number: '11', title: 'MALPRACTICE DEMAND — Scroggins & Associates', category: 'malpractice',
+    recipient: 'Doug Trenz, President',
+    description: '48-hour deadline demand letter — All failures documented, regulatory threats.',
+    letterText: `ARNOLD G. SHAPIRO, M.D.
+MANUELA MILDNER-SHAPIRO
+165 Wyoming Woods Lane • Cincinnati, Ohio 45215
+Arnold: 513-608-3947 • Manuela: 513-703-4202
+
+December 3, 2025
+
+VIA CERTIFIED MAIL — RETURN RECEIPT REQUESTED
+
+Doug Trenz, President
+Scroggins and Associates
+
+RE: FORMAL COMPLAINT AND NON-NEGOTIABLE DEMAND FOR IMMEDIATE REMEDIAL ACTION
+    REGARDING GROSS PROFESSIONAL NEGLIGENCE
+
+Dear Mr. Trenz:
+
+I write to you as a client of Scroggins and Associates for more than 44 YEARS, during which I have entrusted your firm with all of my personal and professional tax and accounting needs and have paid HUNDREDS OF THOUSANDS OF DOLLARS IN FEES.
+
+It is with grave disappointment that I must inform you: YOUR FIRM HAS FAILED CATASTROPHICALLY IN ITS DUTY OF CARE. Your staff and retained counsel have allowed the IRS to unlawfully deprive both me and my wife of our fundamental rights for over four years.
+
+═══════════════════════════════════════════════════════════════════════
+I. CHRONOLOGY OF YOUR FIRM'S FAILURES
+═══════════════════════════════════════════════════════════════════════
+
+• 2021: My passport renewal was denied. Your firm advised this was due to a seven-year IRS audit under the FAST Act and would be resolved "in a few months."
+• 2021-2024: Your staff and retained counsel repeatedly assured me resolution was imminent. NOTHING was accomplished.
+• 2025: FOUR YEARS LATER — no resolution. My wife's passport was ALSO denied.
+• Present: Neither of us has received a CP508C Notice. The audit remains unlawfully extended.
+
+═══════════════════════════════════════════════════════════════════════
+II. PROFESSIONAL FAILURES CONSTITUTING GROSS NEGLIGENCE
+═══════════════════════════════════════════════════════════════════════
+
+A. FAILURE TO KNOW AND APPLY THE FAST ACT (IRC § 7345)
+
+The FAST Act (IRC § 7345) permits passport certification ONLY for "seriously delinquent tax debt" that is:
+• Legally ASSESSED (not merely under examination)
+• Subject to Notice and Demand for payment
+• Subject to filed Notice of Federal Tax Lien OR levy rights exhausted
+
+NONE of these conditions applied to us. A competent firm would have challenged the certification IMMEDIATELY.
+
+B. FAILURE TO CHALLENGE THE UNLAWFUL AUDIT SCOPE
+
+Under IRC § 6501, the statute of limitations for an IRS audit is THREE YEARS. Given my 44-year history of compliant filing, your firm should have IMMEDIATELY demanded the IRS justify its seven-year audit.
+
+C. FAILURE TO KNOW IRS PROCEDURES (IRM 5.1.12.27.4)
+
+The IRS's own Internal Revenue Manual states: "Do not certify a taxpayer as having a seriously delinquent tax debt for modules in status 12 (Examination or Appeals)."
+
+This provision is DISPOSITIVE. Your firm never raised this argument.
+
+D. PASSIVE AND INEFFECTIVE REPRESENTATION
+
+For four years, your firm offered nothing but placating excuses:
+• No challenge to the passport certification
+• No demand for CP508C documentation
+• No TAS engagement until I demanded it
+• No congressional escalation
+• No documented action plan with deadlines
+
+E. RETENTION OF INCOMPETENT COUNSEL
+
+Your firm retained a tax attorney equally ignorant of these fundamental principles.
+
+═══════════════════════════════════════════════════════════════════════
+III. DAMAGES
+═══════════════════════════════════════════════════════════════════════
+
+• Four years of unlawful deprivation of international travel (Dr. Shapiro)
+• Eight months of unlawful deprivation (Mrs. Mildner-Shapiro)
+• My wife's mother (80+) is BLIND from macular degeneration
+• My wife's father (80+) suffers from ADVANCING DEMENTIA
+• They call WEEKLY, weeping, begging to see their daughter
+• Over $12,000 in cancelled international trips
+• Hundreds of thousands of dollars paid to your firm for catastrophically deficient representation
+
+═══════════════════════════════════════════════════════════════════════
+IV. NON-NEGOTIABLE DEMANDS (48 HOURS)
+═══════════════════════════════════════════════════════════════════════
+
+You have 48 HOURS from receipt to provide written confirmation:
+
+1. NEW COUNSEL: Retain, AT YOUR EXPENSE, a preeminent tax controversy attorney with proven IRS litigation experience.
+2. PASSPORT FIX: New counsel must immediately demand reversal under IRC § 7345 and IRM 5.19.25.8.
+3. AUDIT FIX: New counsel must challenge the unlawful seven-year audit under IRC § 6501.
+4. NO WAIVER: This shall not constitute a waiver of any malpractice claims.
+
+═══════════════════════════════════════════════════════════════════════
+V. CONSEQUENCES OF NON-COMPLIANCE
+═══════════════════════════════════════════════════════════════════════
+
+1. MALPRACTICE LITIGATION seeking full recovery of all fees, damages, and punitive damages.
+2. REGULATORY COMPLAINTS with Ohio Accountancy Board, AICPA, IRS Office of Professional Responsibility.
+3. TARGETED PUBLIC DISCLOSURE to your core client base of medical professionals.
+
+Respectfully but firmly,
+
+_________________________________
+Arnold G. Shapiro, M.D.`
+  },
+  {
+    id: 'letter-12', number: '12', title: 'MALPRACTICE DEMAND — Tax Attorney', category: 'malpractice',
+    recipient: 'Retained Tax Attorney',
+    description: 'Termination of representation — File request, litigation hold, malpractice claims.',
+    letterText: `ARNOLD G. SHAPIRO, M.D.
+MANUELA MILDNER-SHAPIRO
+165 Wyoming Woods Lane • Cincinnati, Ohio 45215
+
+December 3, 2025
+
+VIA CERTIFIED MAIL — RETURN RECEIPT REQUESTED
+
+[ATTORNEY NAME]
+[LAW FIRM ADDRESS]
+
+RE: NOTICE OF TERMINATION OF REPRESENTATION AND DEMAND FOR CLIENT FILE
+    FORMAL NOTICE OF MALPRACTICE CLAIMS
+
+Dear Counsel:
+
+Your representation of Arnold G. Shapiro, M.D. and Manuela Mildner-Shapiro is hereby TERMINATED, effective immediately.
+
+═══════════════════════════════════════════════════════════════════════
+I. DEMAND FOR CLIENT FILE (5 BUSINESS DAYS)
+═══════════════════════════════════════════════════════════════════════
+
+Pursuant to Ohio Rules of Professional Conduct 1.16(d), provide complete copies of:
+• All correspondence with the IRS
+• All correspondence with Scroggins and Associates
+• All internal memoranda, notes, and work product
+• Complete billing records
+
+═══════════════════════════════════════════════════════════════════════
+II. LITIGATION HOLD NOTICE
+═══════════════════════════════════════════════════════════════════════
+
+PRESERVE ALL DOCUMENTS AND ELECTRONIC DATA related to our representation. Destruction or alteration may constitute spoliation of evidence.
+
+═══════════════════════════════════════════════════════════════════════
+III. PROFESSIONAL FAILURES CONSTITUTING MALPRACTICE
+═══════════════════════════════════════════════════════════════════════
+
+A. FAILURE TO KNOW BASIC PASSPORT CERTIFICATION LAW
+You failed to recognize that under IRC § 7345, passport certification requires ASSESSED debt. This is ELEMENTARY tax law.
+
+B. FAILURE TO KNOW IRS PROCEDURES
+You failed to know IRM 5.1.12.27.4: "Do not certify a taxpayer for modules in status 12 (Examination or Appeals)."
+
+C. FAILURE TO CHALLENGE AUDIT SCOPE
+You passively accepted a seven-year audit despite IRC § 6501 establishing a three-year statute of limitations.
+
+D. COMPLETE FAILURE TO ADVOCATE
+Over the course of your representation, you achieved NOTHING:
+• No formal challenges filed
+• No letters to the IRS Passport Unit
+• No TAS engagement
+• No documented strategy
+
+E. POTENTIAL CONFLICT OF INTEREST
+You were retained by Scroggins and Associates, the very firm whose failures created this crisis.
+
+═══════════════════════════════════════════════════════════════════════
+IV. RESERVATION OF RIGHTS
+═══════════════════════════════════════════════════════════════════════
+
+We expressly reserve all rights to pursue:
+• Professional malpractice action
+• Breach of fiduciary duty claims
+• Complaint to Ohio State Bar Association
+• Complaint to IRS Office of Professional Responsibility
+
+Govern yourself accordingly.
+
+_________________________________
+Arnold G. Shapiro, M.D.
+
+CC: Doug Trenz (Scroggins and Associates)`
+  }
+];
+
+// ============================================================================
+// DISTRIBUTION PLAN
+// ============================================================================
+const DISTRIBUTION_PACKETS = [
+  { id: 'packet-a', name: 'PACKET A: IRS PASSPORT UNIT', target: 'Primary Target', method: 'Certified Mail with Return Receipt',
+    address: 'Internal Revenue Service\nPassport Certification Unit\nP.O. Box 621506\nAtlanta, GA 30362-3006',
+    contents: ['✓ Cover Sheet (#05)', '✓ Final Master Demand Letter (#01) — THE MAIN DOCUMENT', '✓ General Support Letter (#06)', '✓ Exhibit A: Timeline (#07)', '✓ Exhibit B: Cancelled Trips (#08)', '✓ Exhibit C: Medical Documentation (#09)', '✓ Exhibit D: IRM Sections (#10)'] },
+  { id: 'packet-b', name: 'PACKET B: TAXPAYER ADVOCATE SERVICE', target: 'TAS Headquarters', method: 'Certified Mail',
+    address: 'National Taxpayer Advocate\nTaxpayer Advocate Service — Headquarters\n1111 Constitution Avenue, NW\nWashington, DC 20224',
+    contents: ['✓ TAS TAO Request Letter (#02) — THE MAIN DOCUMENT', '✓ Final Master Demand Letter (#01)', '✓ Exhibit A: Timeline (#07)', '✓ Congressional Briefing Sheet (#04)'] },
+  { id: 'packet-c', name: 'PACKET C: TIGTA', target: 'Treasury Inspector General', method: 'Certified Mail',
+    address: 'Treasury Inspector General for Tax Administration\nOffice of Investigations — Hotline\nP.O. Box 589, Ben Franklin Station\nWashington, DC 20044-0589',
+    contents: ['✓ TIGTA Investigation Complaint (#03) — THE MAIN DOCUMENT', '✓ Congressional Briefing Sheet (#04)', '✓ Exhibit A: Timeline (#07)'] },
+  { id: 'packet-d', name: 'PACKET D: SENATOR BERNIE MORENO', target: 'U.S. Senator (Ohio)', method: 'Certified Mail',
+    address: 'Senator Bernie Moreno\n[Look up current Ohio office address at moreno.senate.gov]',
+    contents: ['✓ Congressional Briefing Sheet (#04) — FIRST PAGE', '✓ Final Master Demand Letter (#01)', '✓ General Support Letter (#06)', '✓ Exhibit A: Timeline (#07)'] },
+  { id: 'packet-e', name: 'PACKET E: SENATOR JON HUSTED', target: 'U.S. Senator (Ohio)', method: 'Certified Mail',
+    address: 'Senator Jon Husted\n[Look up current Ohio office address at husted.senate.gov]',
+    contents: ['✓ Congressional Briefing Sheet (#04) — FIRST PAGE', '✓ Final Master Demand Letter (#01)', '✓ General Support Letter (#06)', '✓ Exhibit A: Timeline (#07)'] },
+  { id: 'packet-f', name: 'PACKET F: REP. GREG LANDSMAN (OH-1)', target: 'U.S. Representative — Cincinnati', method: 'Certified Mail',
+    address: 'Congressman Greg Landsman\nCincinnati District Office\n[Look up address at landsman.house.gov]',
+    contents: ['✓ Congressional Briefing Sheet (#04) — FIRST PAGE', '✓ Final Master Demand Letter (#01)', '✓ General Support Letter (#06)', '✓ Exhibit A: Timeline (#07)'] }
+];
+
+// ============================================================================
+// CONTACTS DATABASE
+// ============================================================================
+const CONTACTS = [
+  { category: 'IRS', name: 'IRS Passport Certification Unit', role: 'Passport certifications', phone: '855-519-4965', address: 'P.O. Box 621506, Atlanta, GA 30362-3006' },
+  { category: 'TAS', name: 'National Taxpayer Advocate', role: 'TAO authority', phone: '1-877-777-4778', address: '1111 Constitution Ave NW, Washington, DC 20224' },
+  { category: 'TAS', name: 'Cincinnati TAS Office', role: 'Local advocate', phone: '513-263-3260', address: '550 Main Street, Cincinnati, OH 45202' },
+  { category: 'TIGTA', name: 'TIGTA Hotline', role: 'IRS oversight', phone: '1-800-366-4484', address: 'P.O. Box 589, Ben Franklin Station, Washington, DC 20044' },
+  { category: 'Congress', name: 'Senator Bernie Moreno', role: 'U.S. Senator (Ohio)', phone: 'Look up office', website: 'moreno.senate.gov' },
+  { category: 'Congress', name: 'Senator Jon Husted', role: 'U.S. Senator (Ohio)', phone: 'Look up office', website: 'husted.senate.gov' },
+  { category: 'Congress', name: 'Rep. Greg Landsman', role: 'U.S. Representative (OH-1)', phone: 'Look up office', website: 'landsman.house.gov' }
+];
+
+// ============================================================================
+// TASKS DATABASE
+// ============================================================================
+const TASKS = [
+  { id: 1, phase: 1, title: 'Print all 12 letters', description: 'Print PDFs from Passport Fortress', completed: false },
+  { id: 2, phase: 1, title: 'Fill in TAS Case ID', description: 'Add case number where marked [INSERT]', completed: false },
+  { id: 3, phase: 1, title: 'Purchase certified mail postage', description: 'Get tracking numbers for 6 packets', completed: false },
+  { id: 4, phase: 1, title: 'Assemble Packet A (IRS)', description: 'Cover sheet + demand letter + exhibits', completed: false },
+  { id: 5, phase: 1, title: 'Assemble Packet B (TAS)', description: 'TAO request + supporting docs', completed: false },
+  { id: 6, phase: 1, title: 'Assemble Packet C (TIGTA)', description: 'Complaint + briefing sheet + timeline', completed: false },
+  { id: 7, phase: 1, title: 'Assemble Packets D-F (Congress)', description: 'Briefing sheet + demand letter for each', completed: false },
+  { id: 8, phase: 1, title: 'Mail ALL packets same day', description: 'Maximum simultaneous pressure', completed: false },
+  { id: 9, phase: 1, title: 'Record tracking numbers', description: 'Log all certified mail numbers', completed: false },
+  { id: 10, phase: 2, title: 'Call TAS after 3 days', description: 'Confirm receipt and request TAO', completed: false },
+  { id: 11, phase: 2, title: 'Call congressional offices', description: 'Confirm constituent case opened', completed: false },
+  { id: 12, phase: 2, title: 'Monitor for IRS response', description: '10 business day deadline', completed: false },
+  { id: 13, phase: 3, title: 'Prepare litigation if no response', description: 'Tax Court petition under § 7345(e)', completed: false },
+  { id: 14, phase: 3, title: 'Document all communications', description: 'Build record for § 7433 damages claim', completed: false }
+];
+
+// ============================================================================
+// MANUAL SECTIONS (for white sidebar TOC)
+// ============================================================================
+const MANUAL_SECTIONS = [
+  { id: 'getting-started', icon: '🚀', title: 'Getting Started', shortTitle: 'Getting Started' },
+  { id: 'dashboard', icon: '🏠', title: 'Dashboard', shortTitle: 'Dashboard' },
+  { id: 'letters', icon: '📝', title: 'All Letters (12)', shortTitle: 'Letters' },
+  { id: 'distribution', icon: '📬', title: 'Distribution Plan', shortTitle: 'Distribution' },
+  { id: 'tasks', icon: '✅', title: 'Action Tasks', shortTitle: 'Tasks' },
+  { id: 'contacts', icon: '📞', title: 'Contacts', shortTitle: 'Contacts' },
+  { id: 'malpractice', icon: '⚖️', title: 'Malpractice Case', shortTitle: 'Malpractice' },
+  { id: 'legal-statutes', icon: '§', title: 'IRC Statutes (12)', shortTitle: 'Statutes' },
+  { id: 'legal-irm', icon: '📖', title: 'IRS Manual (8)', shortTitle: 'IRM' },
+  { id: 'legal-caselaw', icon: '⚖️', title: 'Case Law (10)', shortTitle: 'Case Law' },
+  { id: 'legal-constitutional', icon: '🏛️', title: 'Constitutional (6)', shortTitle: 'Constitutional' },
+  { id: 'legal-admin', icon: '📋', title: 'Administrative (7)', shortTitle: 'Administrative' },
+  { id: 'features', icon: '⭐', title: 'Premium Features', shortTitle: 'Features' },
+  { id: 'workflow', icon: '📅', title: 'Recommended Workflow', shortTitle: 'Workflow' },
+  { id: 'troubleshooting', icon: '❓', title: 'Troubleshooting', shortTitle: 'FAQ' },
+  { id: 'quick-reference', icon: '🏆', title: 'Quick Reference', shortTitle: 'Reference' }
+];
+
+// ============================================================================
+// MANUAL CONTENT DATA
+// ============================================================================
+const MANUAL_CONTENT = {
+  'getting-started': {
+    title: 'Getting Started',
+    content: [
+      { type: 'highlight', text: 'Welcome to Passport Fortress v5.0 ULTIMATE FINAL — your complete legal command center for resolving the IRS passport certification.' },
+      { type: 'h4', text: 'How to Open the Program' },
+      { type: 'p', text: 'Double-click the HTML file on your computer. It opens in your default web browser (Chrome, Firefox, Edge, Safari). No installation required.' },
+      { type: 'h4', text: 'Interface Overview' },
+      { type: 'list', items: ['LEFT SIDEBAR (Dark) — Main navigation to all sections', 'MAIN CONTENT AREA — Displays selected section', 'COLOR CODING — Gold (Passport Mission), Purple (Malpractice), Blue (Legal Database)'] },
+      { type: 'h4', text: 'Data Persistence' },
+      { type: 'p', text: 'Task progress saves automatically using localStorage. Persists between sessions. Note: Data is browser-specific. Clearing cache resets progress.' },
+      { type: 'tip', text: 'Use the same browser each time to maintain your progress.' }
+    ]
+  },
+  'dashboard': {
+    title: 'Dashboard — Mission Command Center',
+    content: [
+      { type: 'p', text: 'The Dashboard is your mission headquarters showing everything at a glance.' },
+      { type: 'h4', text: 'Countdown Timer' },
+      { type: 'p', text: 'Shows days remaining until your 10-business-day deadline. Creates urgency and tracks progress.' },
+      { type: 'h4', text: 'Statistics Bar' },
+      { type: 'list', items: ['4 — Years Arnold has been trapped', '8 — Months Manuela has been trapped', '12 — Letters ready to send', '43 — Legal citations in database'] },
+      { type: 'h4', text: 'Quick Access Cards' },
+      { type: 'p', text: 'Four cards provide quick navigation to Letters, Distribution, Legal Database, and Malpractice sections.' }
+    ]
+  },
+  'letters': {
+    title: 'All Letters (12) — Legal Documents',
+    content: [
+      { type: 'p', text: 'All 12 letters are ready to print and send. Each has been carefully drafted with proper legal citations.' },
+      { type: 'h4', text: 'How to Use' },
+      { type: 'list', items: ['Click any letter card to open full text in a modal', 'Click "📋 Copy" to copy to clipboard', 'Click "🖨️ Print" to send to printer', 'Click "Close" to return to list'] },
+      { type: 'h4', text: 'Letter Categories' },
+      { type: 'list', items: ['⭐ PRIMARY (4) — Main demand letters to government agencies', '📄 SUPPORT (2) — Cover sheet and background letter', '📎 EXHIBIT (4) — Timeline, cancelled trips, medical docs, IRM sections', '⚖️ MALPRACTICE (2) — Demand letters for Scroggins and Tax Attorney'] },
+      { type: 'warning', text: 'IMPORTANT: Replace [INSERT] placeholders with your TAS Case ID (e.g., AS2578953) before printing.' }
+    ]
+  },
+  'distribution': {
+    title: 'Distribution Plan — Who Gets What',
+    content: [
+      { type: 'highlight', text: 'CRITICAL STRATEGY: Send ALL 6 packets on the SAME DAY for maximum simultaneous pressure.' },
+      { type: 'h4', text: '6 Packets Overview' },
+      { type: 'list', items: ['PACKET A — IRS Passport Unit (Atlanta)', 'PACKET B — Taxpayer Advocate Service (Washington DC)', 'PACKET C — TIGTA (Washington DC)', 'PACKET D — Senator Bernie Moreno', 'PACKET E — Senator Jon Husted', 'PACKET F — Rep. Greg Landsman (OH-1)'] },
+      { type: 'p', text: 'Each packet shows the exact contents and mailing address. Use Certified Mail with Return Receipt Requested for tracking.' },
+      { type: 'warning', text: 'DO NOT send malpractice letters (#11, #12) yet. Focus 100% on passports first.' }
+    ]
+  },
+  'tasks': {
+    title: 'Action Tasks — Step-by-Step Checklist',
+    content: [
+      { type: 'p', text: '14 tasks organized into 3 phases. Click checkbox to mark complete. Progress auto-saves.' },
+      { type: 'h4', text: 'Phase 1 (Red): SEND ALL PACKETS' },
+      { type: 'list', items: ['Print all 12 letters', 'Fill in TAS Case ID', 'Purchase certified mail postage', 'Assemble all 6 packets', 'Mail ALL packets same day', 'Record tracking numbers'] },
+      { type: 'h4', text: 'Phase 2 (Orange): FOLLOW UP' },
+      { type: 'list', items: ['Call TAS after 3 days', 'Call congressional offices', 'Monitor for IRS response'] },
+      { type: 'h4', text: 'Phase 3 (Blue): ESCALATE IF NEEDED' },
+      { type: 'list', items: ['Prepare litigation if no response', 'Document all communications'] }
+    ]
+  },
+  'contacts': {
+    title: 'Contacts — Key Phone Numbers',
+    content: [
+      { type: 'h4', text: 'IRS' },
+      { type: 'p', text: 'Passport Certification Unit: 855-519-4965' },
+      { type: 'h4', text: 'Taxpayer Advocate Service' },
+      { type: 'list', items: ['National: 1-877-777-4778', 'Cincinnati: 513-263-3260'] },
+      { type: 'h4', text: 'TIGTA' },
+      { type: 'p', text: 'Hotline: 1-800-366-4484' },
+      { type: 'h4', text: 'Congress' },
+      { type: 'list', items: ['Senator Bernie Moreno: moreno.senate.gov', 'Senator Jon Husted: husted.senate.gov', 'Rep. Greg Landsman: landsman.house.gov'] },
+      { type: 'tip', text: 'When calling congressional offices, ask for "constituent services" and request they open a "constituent case."' }
+    ]
+  },
+  'malpractice': {
+    title: 'Malpractice Case — Lawsuit Preparation',
+    content: [
+      { type: 'warning', text: 'TIMING: Wait until passports are restored before sending malpractice letters. Maintain surprise and strike from victory.' },
+      { type: 'h4', text: 'Scroggins Failures (5 Categories)' },
+      { type: 'list', items: ['Failed to Know FAST Act (IRC § 7345)', 'Failed to Challenge Audit Scope (IRC § 6501)', 'Failed to Know IRS Procedures (IRM 5.1.12.27.4)', 'Passive Representation — 4 years of "few more months"', 'Retained Incompetent Counsel'] },
+      { type: 'h4', text: 'Tax Attorney Failures' },
+      { type: 'list', items: ['Rule 1.1 (Competence) — Failed to know basic law', 'Rule 1.3 (Diligence) — No formal challenges', 'Rule 1.4 (Communication) — No documented strategy', 'Rule 1.7 (Conflict) — Retained by Scroggins, not client'] },
+      { type: 'h4', text: 'Available Remedies' },
+      { type: 'list', items: ['Malpractice Litigation', 'Regulatory Complaints (Ohio Accountancy Board, AICPA, IRS OPR, Ohio Bar)', 'Public Disclosure to physician client base'] }
+    ]
+  },
+  'legal-statutes': {
+    title: 'IRC Statutes (12)',
+    content: [
+      { type: 'p', text: 'The Legal Database contains 12 IRC statutes relevant to passport certification.' },
+      { type: 'h4', text: 'Key Statutes' },
+      { type: 'list', items: ['§ 7345 — Passport certification (requires ASSESSED debt)', '§ 7345(e) — Right to judicial review', '§ 6501 — 3-year statute of limitations', '§ 6320/6330 — Collection Due Process', '§ 6159 — Installment Agreements (blocks certification)', '§ 7811 — Taxpayer Assistance Orders', '§ 7433 — Civil damages up to $1,000,000', '§ 7430 — Attorney fees recoverable'] },
+      { type: 'tip', text: 'Click any citation in the Legal Database to expand and see full details and relevance to your case.' }
+    ]
+  },
+  'legal-irm': {
+    title: 'IRS Manual (8)',
+    content: [
+      { type: 'highlight', text: 'IRM 5.1.12.27.4 is THE KEY PROVISION: "Do not certify a taxpayer as having a seriously delinquent tax debt for modules in status 12 (Examination or Appeals)."' },
+      { type: 'h4', text: 'Key IRM Sections' },
+      { type: 'list', items: ['IRM 5.1.12.27.4 — Debts in examination CANNOT be certified', 'IRM 5.19.25.4 — Statutory exclusions from certification', 'IRM 5.19.25.8 — Reversal requirements (30 days)', 'IRM 13.1.7.9 — ALL passport cases qualify for TAS'] },
+      { type: 'p', text: 'The IRS violated its own manual. This is powerful evidence.' }
+    ]
+  },
+  'legal-caselaw': {
+    title: 'Case Law (10)',
+    content: [
+      { type: 'h4', text: 'Key Supreme Court Cases' },
+      { type: 'list', items: ['Kent v. Dulles (1958) — Right to travel is fundamental liberty', 'Mathews v. Eldridge (1976) — Due process three-factor test', 'Aptheker v. Secretary of State (1964) — Overbroad restrictions struck down', 'Boechler v. Commissioner (2022) — Taxpayer access to courts'] },
+      { type: 'p', text: 'These cases establish that travel is a constitutional right that cannot be denied without proper due process.' }
+    ]
+  },
+  'legal-constitutional': {
+    title: 'Constitutional (6)',
+    content: [
+      { type: 'h4', text: 'Constitutional Violations' },
+      { type: 'list', items: ['5th Amendment Due Process — No final adjudication', '5th Amendment Takings — $12,000+ losses uncompensated', '1st Amendment Association — Cannot visit family', '14th Amendment Equal Protection — Treated worse than assessed debtors'] },
+      { type: 'p', text: 'Multiple constitutional provisions support your case.' }
+    ]
+  },
+  'legal-admin': {
+    title: 'Administrative (7)',
+    content: [
+      { type: 'h4', text: 'Administrative Law' },
+      { type: 'list', items: ['APA § 706(2)(A) — Arbitrary and capricious', 'APA § 706(2)(C) — Exceeds statutory authority', 'APA § 706(2)(D) — Procedural failures', '28 U.S.C. § 1361 — Mandamus to compel action', 'APA § 555(b) — Unreasonable delay (7 years!)'] },
+      { type: 'p', text: 'The IRS action is arbitrary, exceeds authority, and violates procedures.' }
+    ]
+  },
+  'features': {
+    title: 'Premium Features',
+    content: [
+      { type: 'h4', text: 'One-Click Copy' },
+      { type: 'p', text: 'Every letter can be copied to clipboard instantly. Click "📋 Copy" button in modal.' },
+      { type: 'h4', text: 'Print Directly' },
+      { type: 'p', text: 'Click "🖨️ Print" button to send to printer from modal.' },
+      { type: 'h4', text: 'Search Functionality' },
+      { type: 'p', text: 'Legal Database includes real-time search. Type to filter citations by code, title, or summary.' },
+      { type: 'h4', text: 'Auto-Save' },
+      { type: 'p', text: 'Task progress saves automatically using localStorage. Persists between sessions.' },
+      { type: 'h4', text: 'Color Coding' },
+      { type: 'list', items: ['Gold — Passport Mission', 'Emerald — Letters', 'Purple — Malpractice', 'Blue — Legal Database', 'Red — Warnings and Phase 1 tasks'] }
+    ]
+  },
+  'workflow': {
+    title: 'Recommended Workflow',
+    content: [
+      { type: 'h4', text: 'Day 1: Preparation' },
+      { type: 'list', items: ['Print all 10 IRS letters (#01-#10)', 'Replace [INSERT] with TAS Case ID', 'Assemble 6 packets per Distribution section', 'Prepare certified mail envelopes'] },
+      { type: 'h4', text: 'Day 2: Mail Everything' },
+      { type: 'list', items: ['Go to Post Office early', 'Send all 6 packets via Certified Mail', 'Get and record all tracking numbers'] },
+      { type: 'h4', text: 'Days 3-5: Follow Up' },
+      { type: 'list', items: ['Day 3: Call TAS (1-877-777-4778)', 'Days 4-5: Call congressional offices'] },
+      { type: 'h4', text: 'After Passports Restored' },
+      { type: 'p', text: 'Print and send Letters #11 and #12 (malpractice demands).' }
+    ]
+  },
+  'troubleshooting': {
+    title: 'Troubleshooting — FAQ',
+    content: [
+      { type: 'h4', text: 'Q: The program won\'t open' },
+      { type: 'p', text: 'A: Use modern browser (Chrome, Firefox, Edge). Make sure JavaScript enabled.' },
+      { type: 'h4', text: 'Q: My task progress disappeared' },
+      { type: 'p', text: 'A: May have cleared browser data, used different browser, or used Incognito mode.' },
+      { type: 'h4', text: 'Q: Where do I put my TAS Case ID?' },
+      { type: 'p', text: 'A: Replace [INSERT] placeholders. Copy to Word, use Find & Replace.' },
+      { type: 'h4', text: 'Q: Should I send malpractice letters now?' },
+      { type: 'p', text: 'A: NO. Wait until passports restored. Maintain surprise.' },
+      { type: 'h4', text: 'Q: What\'s the installment agreement trap?' },
+      { type: 'p', text: 'A: Section IV of Letter #01 requests IA without conceding debt. Pending IA is statutory exclusion. IRS must decertify.' }
+    ]
+  },
+  'quick-reference': {
+    title: 'Quick Reference Card',
+    content: [
+      { type: 'h4', text: 'Key Legal Arguments' },
+      { type: 'list', items: ['IRC § 7345 — Requires ASSESSED debt', 'IRM 5.1.12.27.4 — No certification during exam', 'IRC § 6501 — 3-year statute violated', 'IRC § 7433 — Up to $1,000,000 damages', 'Kent v. Dulles — Travel is fundamental liberty'] },
+      { type: 'h4', text: 'Key Facts' },
+      { type: 'list', items: ['Arnold: 4 years trapped', 'Manuela: 8 months trapped', 'Losses: Over $12,000', 'CP508C: Never received', 'Mother: Blind', 'Father: Dementia'] },
+      { type: 'h4', text: 'Key Phone Numbers' },
+      { type: 'list', items: ['IRS Passport: 855-519-4965', 'TAS National: 1-877-777-4778', 'TAS Cincinnati: 513-263-3260', 'TIGTA: 1-800-366-4484'] }
+    ]
+  }
+};
+
+// ============================================================================
+// MAIN APPLICATION
+// ============================================================================
+const App = () => {
+  const [activeSection, setActiveSection] = React.useState('dashboard');
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [selectedLetter, setSelectedLetter] = React.useState(null);
+  const [expandedLegal, setExpandedLegal] = React.useState(null);
+  const [activeManualSection, setActiveManualSection] = React.useState('getting-started');
+  const [manualSearch, setManualSearch] = React.useState('');
+  const [tasks, setTasks] = React.useState(() => {
+    const saved = localStorage.getItem('passfortress_v5_final_tasks');
+    return saved ? JSON.parse(saved) : TASKS;
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('passfortress_v5_final_tasks', JSON.stringify(tasks));
+  }, [tasks]);
+
+  const toggleTask = (id) => setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+  const completedCount = tasks.filter(t => t.completed).length;
+  const deadline = new Date('2025-12-17');
+  const daysLeft = Math.max(0, Math.ceil((deadline - new Date()) / (1000 * 60 * 60 * 24)));
+  const copyToClipboard = (text) => { navigator.clipboard.writeText(text); alert('Copied to clipboard!'); };
+
+  const filterLegal = (items) => {
+    if (!searchQuery.trim()) return items;
+    const q = searchQuery.toLowerCase();
+    return items.filter(i => i.code.toLowerCase().includes(q) || i.title.toLowerCase().includes(q) || i.summary.toLowerCase().includes(q));
+  };
+
+  const filteredManualSections = MANUAL_SECTIONS.filter(s => 
+    !manualSearch.trim() || s.title.toLowerCase().includes(manualSearch.toLowerCase())
+  );
+
+  const sectionConfig = {
+    'dashboard': { title: '🏰 Mission Command', color: 'gold' },
+    'letters': { title: '📝 All Letters (12)', color: 'emerald' },
+    'distribution': { title: '📬 Distribution Plan', color: 'gold' },
+    'tasks': { title: '✅ Action Tasks', color: 'gold' },
+    'contacts': { title: '📞 Contacts', color: 'gold' },
+    'lawsuit': { title: '⚖️ Malpractice Case', color: 'purple' },
+    'legal-statutes': { title: '§ IRC Statutes (12)', color: 'blue' },
+    'legal-irm': { title: '📖 IRS Manual (8)', color: 'blue' },
+    'legal-caselaw': { title: '⚖️ Case Law (10)', color: 'blue' },
+    'legal-constitutional': { title: '🏛️ Constitutional (6)', color: 'blue' },
+    'legal-admin': { title: '📋 Administrative (7)', color: 'blue' },
+    'manual': { title: '📖 User Manual', color: 'teal' }
+  };
+  const currentSection = sectionConfig[activeSection] || sectionConfig['dashboard'];
+  const isManualActive = activeSection === 'manual';
+
+  // ============================================================================
+  // RENDER FUNCTIONS
+  // ============================================================================
+
+  const renderDashboard = () => (
+    <div>
+      <div className="countdown-container">
+        <div className="countdown-label">⏰ DAYS UNTIL 10 BUSINESS DAY DEADLINE</div>
+        <div className="countdown-value">{daysLeft}</div>
+      </div>
+      <div className="stat-grid">
+        <div className="stat-card"><div className="stat-value">4</div><div className="stat-label">Years Arnold Trapped</div></div>
+        <div className="stat-card"><div className="stat-value">8</div><div className="stat-label">Months Manuela Trapped</div></div>
+        <div className="stat-card"><div className="stat-value">12</div><div className="stat-label">Letters Ready</div></div>
+        <div className="stat-card"><div className="stat-value">43</div><div className="stat-label">Legal Citations</div></div>
+      </div>
+      <div className="section-grid">
+        <div className="card"><div className="card-title emerald">📝 Letters Ready</div><div className="card-content"><p>All 12 letters with corrected facts:</p><ul style={{marginTop:'0.35rem',marginLeft:'0.9rem',fontSize:'0.8rem'}}><li>Arnold: 4 years trapped</li><li>Manuela: 8 months trapped</li><li>Loss: Over $12,000</li></ul><button className="btn btn-emerald" style={{marginTop:'0.65rem'}} onClick={() => setActiveSection('letters')}>📝 View Letters</button></div></div>
+        <div className="card"><div className="card-title">📬 Distribution Plan</div><div className="card-content"><p>6 packets ready:</p><ul style={{marginTop:'0.35rem',marginLeft:'0.9rem',fontSize:'0.8rem'}}><li>IRS Passport Unit</li><li>TAS Headquarters</li><li>TIGTA</li><li>Senators & Rep. Landsman</li></ul><button className="btn btn-gold" style={{marginTop:'0.65rem'}} onClick={() => setActiveSection('distribution')}>📬 View Plan</button></div></div>
+        <div className="card"><div className="card-title blue">📚 Legal Database</div><div className="card-content"><p>43 citations organized:</p><ul style={{marginTop:'0.35rem',marginLeft:'0.9rem',fontSize:'0.8rem'}}><li>12 IRC Statutes</li><li>8 IRS Manual sections</li><li>10 Case Law precedents</li><li>13 Constitutional/Admin</li></ul><button className="btn btn-blue" style={{marginTop:'0.65rem'}} onClick={() => setActiveSection('legal-statutes')}>📚 View Legal</button></div></div>
+        <div className="card"><div className="card-title purple">⚖️ After Passports</div><div className="card-content"><p>Malpractice case prep:</p><ul style={{marginTop:'0.35rem',marginLeft:'0.9rem',fontSize:'0.8rem'}}><li>Scroggins & Associates</li><li>Tax Attorney</li></ul><p style={{marginTop:'0.35rem',fontSize:'0.75rem',color:'var(--warning)'}}>Wait until passports restored.</p></div></div>
+      </div>
+    </div>
+  );
+
+  const renderLetters = () => (
+    <div>
+      <div style={{marginBottom:'0.9rem',padding:'0.65rem',background:'rgba(16,185,129,0.1)',borderRadius:'6px',border:'1px solid var(--emerald-dark)'}}>
+        <strong style={{color:'var(--emerald-light)'}}>✓ All 12 Letters Updated December 3, 2025</strong>
+        <p style={{fontSize:'0.75rem',marginTop:'0.25rem'}}>Click any letter to view full text and copy.</p>
+      </div>
+      {CLAUDE_LETTERS.map(letter => (
+        <div key={letter.id} className="letter-card" onClick={() => setSelectedLetter(letter)}>
+          <span className={`letter-badge ${letter.category}`}>{letter.category === 'primary' ? '⭐ PRIMARY' : letter.category === 'exhibit' ? '📎 EXHIBIT' : letter.category === 'malpractice' ? '⚖️ MALPRACTICE' : '📄 SUPPORT'}</span>
+          <div className="letter-title">#{letter.number} — {letter.title}</div>
+          <div className="letter-recipient">To: {letter.recipient}</div>
+          <div className="letter-description">{letter.description}</div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderDistribution = () => (
+    <div>
+      <div style={{marginBottom:'0.9rem',padding:'0.65rem',background:'rgba(212,175,55,0.1)',borderRadius:'6px',border:'1px solid var(--gold-dark)'}}>
+        <strong style={{color:'var(--gold-light)'}}>📬 SEND ALL PACKETS THE SAME DAY</strong>
+        <p style={{fontSize:'0.75rem',marginTop:'0.25rem'}}>Maximum simultaneous pressure. IRS has had 4 years.</p>
+      </div>
+      {DISTRIBUTION_PACKETS.map(packet => (
+        <div key={packet.id} className="packet-card">
+          <div className="packet-title">{packet.name}</div>
+          <div style={{fontSize:'0.7rem',color:'var(--text-muted)',marginBottom:'0.35rem'}}>{packet.target} • {packet.method}</div>
+          <div className="packet-address">{packet.address}</div>
+          <div style={{fontWeight:'600',fontSize:'0.8rem',marginBottom:'0.3rem'}}>Contents:</div>
+          <ul className="packet-contents">{packet.contents.map((item, i) => <li key={i}>{item}</li>)}</ul>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderTasks = () => (
+    <div>
+      <div style={{marginBottom:'0.65rem',color:'var(--text-secondary)',fontSize:'0.8rem'}}>Progress: {completedCount} of {tasks.length} tasks complete</div>
+      {[1, 2, 3].map(phase => (
+        <div key={phase} style={{marginBottom:'1.1rem'}}>
+          <h3 style={{marginBottom:'0.5rem',fontSize:'0.9rem',color: phase === 1 ? '#e74c3c' : phase === 2 ? '#f39c12' : '#3498db'}}>
+            Phase {phase}: {phase === 1 ? 'Send All Packets' : phase === 2 ? 'Follow Up' : 'Escalate if Needed'}
+          </h3>
+          {tasks.filter(t => t.phase === phase).map(task => (
+            <div key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
+              <div className={`task-checkbox ${task.completed ? 'checked' : ''}`} onClick={() => toggleTask(task.id)}>{task.completed && '✓'}</div>
+              <div className="task-content"><div className="task-title">{task.title}</div><div className="task-description">{task.description}</div></div>
+              <span className={`task-phase phase-${phase}`}>P{phase}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderContacts = () => (
+    <div>
+      {['IRS', 'TAS', 'TIGTA', 'Congress'].map(category => (
+        <div key={category} style={{marginBottom:'1.1rem'}}>
+          <h3 style={{marginBottom:'0.5rem',fontSize:'0.9rem',color:'var(--gold-primary)'}}>{category}</h3>
+          {CONTACTS.filter(c => c.category === category).map((contact, i) => (
+            <div key={i} className="contact-card">
+              <div className="contact-name">{contact.name}</div>
+              <div className="contact-role">{contact.role}</div>
+              <div className="contact-info">
+                {contact.phone && <div>📞 {contact.phone}</div>}
+                {contact.address && <div>📍 {contact.address}</div>}
+                {contact.website && <div>🌐 {contact.website}</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderLawsuit = () => (
+    <div>
+      <div style={{marginBottom:'0.9rem',padding:'0.65rem',background:'rgba(155,89,182,0.1)',borderRadius:'6px',border:'1px solid var(--purple-dark)'}}>
+        <strong style={{color:'var(--purple-light)'}}>⚖️ HOLD UNTIL PASSPORTS RESTORED</strong>
+        <p style={{fontSize:'0.75rem',marginTop:'0.25rem'}}>Letters #11 and #12 ready. File malpractice AFTER passport resolution.</p>
+      </div>
+      
+      <div className="card"><div className="card-title purple">📋 Case Overview</div><div className="card-content"><p>After <strong>44 YEARS</strong> as a client, paying <strong>hundreds of thousands in fees</strong>, the firm catastrophically failed.</p></div></div>
+
+      <div className="card"><div className="card-title purple">🔴 Scroggins Failures</div><div className="card-content">
+        <p style={{marginBottom:'0.4rem'}}><strong>1.</strong> Failed to Know FAST Act (IRC § 7345)</p>
+        <p style={{marginBottom:'0.4rem'}}><strong>2.</strong> Failed to Challenge Audit Scope (IRC § 6501)</p>
+        <p style={{marginBottom:'0.4rem'}}><strong>3.</strong> Failed to Know IRS Procedures (IRM 5.1.12.27.4)</p>
+        <p style={{marginBottom:'0.4rem'}}><strong>4.</strong> Passive Representation — 4 years of "few more months"</p>
+        <p><strong>5.</strong> Retained Incompetent Counsel</p>
+      </div></div>
+
+      <div className="card"><div className="card-title purple">🔴 Tax Attorney Failures</div><div className="card-content">
+        <p style={{marginBottom:'0.4rem'}}><strong>Rule 1.1</strong> (Competence) — Failed to know basic law</p>
+        <p style={{marginBottom:'0.4rem'}}><strong>Rule 1.3</strong> (Diligence) — No formal challenges</p>
+        <p style={{marginBottom:'0.4rem'}}><strong>Rule 1.4</strong> (Communication) — No documented strategy</p>
+        <p><strong>Rule 1.7</strong> (Conflict) — Retained by Scroggins, not client</p>
+      </div></div>
+
+      <div className="card"><div className="card-title">💰 Damages</div><div className="card-content">
+        <div className="stat-grid">
+          <div className="stat-card"><div className="stat-value" style={{fontSize:'1rem'}}>$12K+</div><div className="stat-label">Trips</div></div>
+          <div className="stat-card"><div className="stat-value" style={{fontSize:'1rem'}}>$$K</div><div className="stat-label">Fees</div></div>
+          <div className="stat-card"><div className="stat-value" style={{fontSize:'1rem'}}>4 YRS</div><div className="stat-label">Lost</div></div>
+          <div className="stat-card"><div className="stat-value" style={{fontSize:'1rem'}}>SEVERE</div><div className="stat-label">Distress</div></div>
+        </div>
+      </div></div>
+
+      <div className="card"><div className="card-title emerald">📄 Demand Letters Ready</div><div className="card-content">
+        <p style={{marginBottom:'0.65rem'}}>Letters #11 and #12 in Letters section.</p>
+        <button className="btn btn-emerald" onClick={() => setActiveSection('letters')}>📝 View Letters</button>
+      </div></div>
+    </div>
+  );
+
+  const renderLegal = (items) => {
+    const filtered = filterLegal(items);
+    return (
+      <div>
+        <div className="search-box" style={{marginBottom:'0.9rem',maxWidth:'320px'}}>
+          <span>🔍</span>
+          <input placeholder="Search citations..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+        </div>
+        <div style={{marginBottom:'0.65rem',fontSize:'0.75rem',color:'var(--text-muted)'}}>Showing {filtered.length} of {items.length}</div>
+        {filtered.map((item, i) => (
+          <div key={i} className="legal-item" onClick={() => setExpandedLegal(expandedLegal === item.id ? null : item.id)}>
+            <div className="legal-citation">{item.code}</div>
+            <div className="legal-title">{item.title}</div>
+            <div className="legal-summary">{item.summary}</div>
+            {expandedLegal === item.id && (
+              <>
+                <div className="legal-relevance"><strong>Our Case:</strong> {item.relevance}</div>
+                {item.keyPoints && <ul style={{marginTop:'0.4rem',paddingLeft:'1.1rem'}}>{item.keyPoints.map((kp, j) => <li key={j} style={{fontSize:'0.7rem',color:'var(--text-secondary)'}}>{kp}</li>)}</ul>}
+              </>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // ============================================================================
+  // RENDER MANUAL CONTENT
+  // ============================================================================
+  const renderManualContent = () => {
+    const section = MANUAL_CONTENT[activeManualSection];
+    if (!section) return <div>Select a section from the sidebar.</div>;
+
+    return (
+      <div className="manual-content-area">
+        <h2 className="manual-section-title">{section.title}</h2>
+        {section.content.map((item, i) => {
+          switch (item.type) {
+            case 'h4':
+              return <div key={i} className="manual-subsection"><h4>{item.text}</h4></div>;
+            case 'p':
+              return <p key={i} style={{color:'var(--text-secondary)',fontSize:'0.85rem',lineHeight:'1.6',marginBottom:'0.65rem'}}>{item.text}</p>;
+            case 'list':
+              return <ul key={i} style={{margin:'0.5rem 0 0.75rem 1.25rem',color:'var(--text-secondary)',fontSize:'0.85rem'}}>{item.items.map((li, j) => <li key={j} style={{margin:'0.3rem 0'}}>{li}</li>)}</ul>;
+            case 'highlight':
+              return <div key={i} className="manual-highlight-box"><strong style={{color:'var(--teal-light)'}}>{item.text}</strong></div>;
+            case 'warning':
+              return <div key={i} className="manual-warning-box"><strong style={{color:'var(--danger)'}}>⚠️ {item.text}</strong></div>;
+            case 'tip':
+              return <div key={i} className="manual-tip-box"><strong style={{color:'var(--emerald-light)'}}>💡 TIP: {item.text}</strong></div>;
+            default:
+              return null;
+          }
+        })}
+      </div>
+    );
+  };
+
+  const renderLetterModal = () => {
+    if (!selectedLetter) return null;
+    return (
+      <div className="modal-overlay" onClick={() => setSelectedLetter(null)}>
+        <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-header">
+            <div className="modal-title">#{selectedLetter.number} — {selectedLetter.title}</div>
+            <button className="modal-close" onClick={() => setSelectedLetter(null)}>×</button>
+          </div>
+          <div className="modal-body"><div className="letter-text">{selectedLetter.letterText}</div></div>
+          <div className="modal-footer">
+            <button className="btn btn-outline" onClick={() => setSelectedLetter(null)}>Close</button>
+            <button className="btn btn-emerald" onClick={() => copyToClipboard(selectedLetter.letterText)}>📋 Copy</button>
+            <button className="btn btn-gold" onClick={() => window.print()}>🖨️ Print</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'dashboard': return renderDashboard();
+      case 'letters': return renderLetters();
+      case 'distribution': return renderDistribution();
+      case 'tasks': return renderTasks();
+      case 'contacts': return renderContacts();
+      case 'lawsuit': return renderLawsuit();
+      case 'legal-statutes': return renderLegal(LEGAL_DATABASE.statutes);
+      case 'legal-irm': return renderLegal(LEGAL_DATABASE.irm);
+      case 'legal-caselaw': return renderLegal(LEGAL_DATABASE.caseLaw);
+      case 'legal-constitutional': return renderLegal(LEGAL_DATABASE.constitutional);
+      case 'legal-admin': return renderLegal(LEGAL_DATABASE.administrative);
+      case 'manual': return renderManualContent();
+      default: return renderDashboard();
+    }
+  };
+
+  // ============================================================================
+  // MAIN RENDER
+  // ============================================================================
+  return (
+    <div className="app-container">
+      {/* MAIN SIDEBAR (Dark) */}
+      <div className="sidebar">
+        <div className="sidebar-header">
+          <div className="logo">🏰 PASSPORT FORTRESS</div>
+          <div className="logo-subtitle">LEGAL COMMAND CENTER</div>
+          <div className="version-badge">v5.0 ULTIMATE FINAL</div>
+        </div>
+        <div className="nav-section">
+          <div className="nav-group-title">🎯 PART 1: PASSPORT MISSION</div>
+          <div className={`nav-item ${activeSection === 'dashboard' ? 'active-gold' : ''}`} onClick={() => setActiveSection('dashboard')}><span className="nav-icon">🏠</span><span className="nav-text">Dashboard</span></div>
+          <div className={`nav-item ${activeSection === 'letters' ? 'active-emerald' : ''}`} onClick={() => setActiveSection('letters')}><span className="nav-icon">📝</span><span className="nav-text">All Letters</span><span className="nav-badge badge-emerald">12</span></div>
+          <div className={`nav-item ${activeSection === 'distribution' ? 'active-gold' : ''}`} onClick={() => setActiveSection('distribution')}><span className="nav-icon">📬</span><span className="nav-text">Distribution</span><span className="nav-badge badge-gold">6</span></div>
+          <div className={`nav-item ${activeSection === 'tasks' ? 'active-gold' : ''}`} onClick={() => setActiveSection('tasks')}><span className="nav-icon">✅</span><span className="nav-text">Tasks</span><span className="nav-badge badge-gold">{completedCount}/{tasks.length}</span></div>
+          <div className={`nav-item ${activeSection === 'contacts' ? 'active-gold' : ''}`} onClick={() => setActiveSection('contacts')}><span className="nav-icon">📞</span><span className="nav-text">Contacts</span></div>
+
+          <div className="nav-group-title">⚖️ PART 2: LAWSUIT</div>
+          <div className={`nav-item ${activeSection === 'lawsuit' ? 'active-purple' : ''}`} onClick={() => setActiveSection('lawsuit')}><span className="nav-icon">⚖️</span><span className="nav-text">Malpractice</span><span className="nav-badge badge-purple">PREP</span></div>
+
+          <div className="nav-group-title">📚 PART 3: LEGAL (43)</div>
+          <div className={`nav-item ${activeSection === 'legal-statutes' ? 'active-blue' : ''}`} onClick={() => setActiveSection('legal-statutes')}><span className="nav-icon">§</span><span className="nav-text">IRC Statutes</span><span className="nav-badge badge-blue">12</span></div>
+          <div className={`nav-item ${activeSection === 'legal-irm' ? 'active-blue' : ''}`} onClick={() => setActiveSection('legal-irm')}><span className="nav-icon">📖</span><span className="nav-text">IRS Manual</span><span className="nav-badge badge-blue">8</span></div>
+          <div className={`nav-item ${activeSection === 'legal-caselaw' ? 'active-blue' : ''}`} onClick={() => setActiveSection('legal-caselaw')}><span className="nav-icon">⚖️</span><span className="nav-text">Case Law</span><span className="nav-badge badge-blue">10</span></div>
+          <div className={`nav-item ${activeSection === 'legal-constitutional' ? 'active-blue' : ''}`} onClick={() => setActiveSection('legal-constitutional')}><span className="nav-icon">🏛️</span><span className="nav-text">Constitutional</span><span className="nav-badge badge-blue">6</span></div>
+          <div className={`nav-item ${activeSection === 'legal-admin' ? 'active-blue' : ''}`} onClick={() => setActiveSection('legal-admin')}><span className="nav-icon">📋</span><span className="nav-text">Administrative</span><span className="nav-badge badge-blue">7</span></div>
+
+          <div className="nav-group-title">📖 HELP</div>
+          <div className={`nav-item ${activeSection === 'manual' ? 'active-gold' : ''}`} onClick={() => { setActiveSection('manual'); setActiveManualSection('getting-started'); }}><span className="nav-icon">📖</span><span className="nav-text">User Manual</span><span className="nav-badge badge-gold">GUIDE</span></div>
+        </div>
+      </div>
+
+      {/* MANUAL SIDEBAR (White) - Only visible when Manual is active */}
+      <div className={`manual-sidebar ${isManualActive ? 'visible' : ''}`}>
+        <div className="manual-sidebar-header">
+          <h2>📖 Passport Fortress</h2>
+          <p>User Manual v5.0</p>
+        </div>
+        <div className="manual-sidebar-search">
+          <input type="text" placeholder="Search manual..." value={manualSearch} onChange={e => setManualSearch(e.target.value)} />
+        </div>
+        <div className="manual-toc-list">
+          {filteredManualSections.map(section => (
+            <div 
+              key={section.id} 
+              className={`manual-toc-item ${activeManualSection === section.id ? 'active' : ''}`}
+              onClick={() => setActiveManualSection(section.id)}
+            >
+              <span className="manual-toc-icon">{section.icon}</span>
+              <span>{section.title}</span>
+            </div>
+          ))}
+        </div>
+        <div className="manual-sidebar-footer">
+          <p>Built by Claude • December 2025</p>
+          <p>12 Letters • 43 Citations</p>
+        </div>
+      </div>
+
+      {/* MAIN CONTENT */}
+      <div className={`main-content ${isManualActive ? 'with-manual-sidebar' : ''}`}>
+        <div className="header">
+          <div className={`header-title ${currentSection.color}`}>{currentSection.title}</div>
+        </div>
+        <div className="page-content">{renderContent()}</div>
+      </div>
+
+      {renderLetterModal()}
+    </div>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
